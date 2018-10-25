@@ -1,8 +1,9 @@
 from flask import request
 from flask_restplus import Resource
 
+from app.main.decorators.authorization_decorator import require_authorization
 from app.main.dto.authorization_dto import AuthorizationDTO
-from app.main.service.authorization_service import AuthorizationResponse, login
+from app.main.service.authorization_service import AuthorizationResponse, login, logout
 
 api = AuthorizationDTO.api
 
@@ -19,4 +20,8 @@ class Login(Resource):
 
 @api.route('logout')
 class Logout(Resource):
-    pass
+    @api.response(AuthorizationResponse.Success, 'Logout successful.')
+    @api.doc('Logout from a session. Succeeds only if the user is logged in.', security='jwt')
+    @require_authorization
+    def get(self):
+        return logout()

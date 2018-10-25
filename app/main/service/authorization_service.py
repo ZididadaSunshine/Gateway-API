@@ -1,11 +1,12 @@
 import datetime
-from functools import wraps
 
 import jwt
 from flask import request
 
+from app.main import database
 from app.main.config import secret
 from app.main.model.account_model import Account
+from app.main.model.invalid_token_model import InvalidToken
 
 
 class AuthorizationResponse:
@@ -14,22 +15,8 @@ class AuthorizationResponse:
     Unauthorized = 401
 
 
-def require_authorization(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = request.headers.get('Authorization')
-
-        if token:
-            decoded_token = decode_token(token)
-
-            if decoded_token:
-                return f(*args, **kwargs)
-
-        # Either no token was provided or it is invalid
-        # Either way, return an unauthorized response
-        return dict(message='You are not authorized to perform this request.'), AuthorizationResponse.Unauthorized
-
-    return decorated
+def get_token():
+    return request.headers.get('Authorization')
 
 
 def decode_token(token):
@@ -55,3 +42,15 @@ def login(data):
         return dict(message='Successful login.', token=encode_token(account)), AuthorizationResponse.Success
     else:
         return dict(message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
+
+
+def logout():
+    token = get_token()
+
+    if token:
+        invalid_token = InvalidToken(token=token, creation_date=datetime.datetime.utcnow())
+
+        database.session.add(invalid_token)
+        database.session.commit()
+
+    return dict(message='Logout successful.'), AuthorizationResponse.Success

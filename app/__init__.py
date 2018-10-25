@@ -6,7 +6,9 @@ from app.main.controller.account_controller import api as account_namespace
 
 blueprint = Blueprint('sw7-gateway-api', __name__)
 
-api = Api(blueprint, title='SW7 Gateway API', version='1.0')
+api = Api(blueprint, title='SW7 Gateway API', version='1.0', authorizations={'jwt': {'type': 'apiKey',
+                                                                                     'in': 'header',
+                                                                                     'name': 'Authorization'}})
 
 # Add namespaces to API
 api.add_namespace(authorization_namespace, path='/')

@@ -7,12 +7,11 @@ from app.main.service.account_service import AccountServiceResponse, create_acco
 api = AccountDTO.api
 
 
-@api.route('/')
+@api.route('')
 class AccountsResource(Resource):
     @api.response(AccountServiceResponse.Success, 'Account successfully created.')
     @api.response(AccountServiceResponse.AlreadyExists, 'An account already exists with the requested e-mail.')
     @api.expect(AccountDTO.new_account, validate=True)
-    @api.doc('Register a new account.')
     def post(self):
         return create_account(request.json)
 
