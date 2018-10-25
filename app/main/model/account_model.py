@@ -1,14 +1,10 @@
-import datetime
-
-import jwt
-from flask_sqlalchemy import Model
+import flask_bcrypt
 from sqlalchemy import Column, Integer, String, DateTime
 
-from app.main.config import secret
-import flask_bcrypt
+from app.main import database
 
 
-class Account(Model):
+class Account(database.Model):
     """ SQLAlchemy model for accounts. """
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -25,13 +21,6 @@ class Account(Model):
     """ Check if a password matches the hashed password stored for the account. """
     def check_password(self, password):
         return flask_bcrypt.check_password_hash(self.password, password)
-
-    """ Returns an encoded JWT token for this account. """
-    def encode_jwt(self):
-        payload = {'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1), 'iat': datetime.datetime.utcnow(),
-                   'sub': self.id}
-
-        return jwt.encode(payload, secret, algorithm='HS256')
 
     def __repr__(self):
         return f"<User {self.email}'>"

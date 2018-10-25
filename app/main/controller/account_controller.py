@@ -1,15 +1,18 @@
+from flask import request
 from flask_restplus import Resource
 
 from app.main.dto.account_dto import AccountDTO
+from app.main.service.account_service import AccountServiceResponse, create_account
 
 api = AccountDTO.api
 
 
 @api.route('/')
-class UnspecifiedAccount(Resource):
-    @api.response(200, 'Account successfully created.')
-    @api.response(400, 'An account already exists with the requested e-mail.')
-    @api.expect(AccountDTO.account, validate=True)
+class AccountsResource(Resource):
+    @api.response(AccountServiceResponse.Success, 'Account successfully created.')
+    @api.response(AccountServiceResponse.AlreadyExists, 'An account already exists with the requested e-mail.')
+    @api.expect(AccountDTO.new_account, validate=True)
     @api.doc('Register a new account.')
     def post(self):
-        return 200, ''
+        return create_account(request.json)
+
