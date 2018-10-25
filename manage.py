@@ -1,11 +1,18 @@
+from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
-from app.main import create_app
+from app.main import create_app, database
+from app import blueprint
 
 app = create_app('dev')
+app.register_blueprint(blueprint)
 app.app_context().push()
 
 manager = Manager(app)
+
+migrate = Migrate(app, database)
+
+manager.add_command('db', MigrateCommand)
 
 
 @manager.command

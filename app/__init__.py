@@ -1,8 +1,11 @@
 from flask import Blueprint
 from flask_restplus import Api
 
-blueprint = Blueprint('sw7-restful-api', __name__)
+from app.main.controller.authorization_controller import api as authorization_namespace
 
-api = Api(blueprint, title='SW7 RESTful API', version='1.0')
+blueprint = Blueprint('sw7-gateway-api', __name__)
 
-#api.add_namespace(account_namespace, path='/account')
+api = Api(blueprint, title='SW7 Gateway API', version='1.0')
+
+# Add namespaces to API
+api.add_namespace(authorization_namespace, path='/')
