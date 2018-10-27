@@ -5,7 +5,7 @@ from app.main.model.account_model import Account
 
 
 class AccountServiceResponse:
-    Success = 200
+    Created = 201
     AlreadyExists = 400
 
 
@@ -19,6 +19,6 @@ def create_account(data):
         database.session.add(account)
         database.session.commit()
 
-        return dict(message='Account successfully created.'), AccountServiceResponse.Success
+        return dict(message='Account successfully created.'), AccountServiceResponse.Created
     else:
         return dict(message=f'E-mail is already taken.'), AccountServiceResponse.AlreadyExists

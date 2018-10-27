@@ -9,7 +9,7 @@ api = AccountDTO.api
 
 @api.route('')
 class AccountsResource(Resource):
-    @api.response(AccountServiceResponse.Success, 'Account successfully created.')
+    @api.response(AccountServiceResponse.Created, 'Account successfully created.')
     @api.response(AccountServiceResponse.AlreadyExists, 'An account already exists with the requested e-mail.')
     @api.expect(AccountDTO.new_account, validate=True)
     def post(self):
