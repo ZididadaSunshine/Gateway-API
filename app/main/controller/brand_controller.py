@@ -30,7 +30,7 @@ class BrandsResource(Resource):
         return create_brand(get_account_id(), request.json)
 
 
-@api.route('/<public_id>')
+@api.route('/<int:public_id>')
 @api.param('public_id', 'A brand identifier associated with the authorized account.')
 class BrandResource(Resource):
     @api.response(BrandServiceResponse.Success, 'The brand was successfully deleted.')
