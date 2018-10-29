@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app.main.config import configurations
 
 # Initialize SQLAlchemy database
-database = SQLAlchemy()
+db = SQLAlchemy()
 
 # Initialzie Bcrypt
 bcrypt = Bcrypt()
@@ -19,7 +19,7 @@ def create_app(config):
     # Create Flask application and initialize Bcrypt and SQLAlchemy with the application instance
     app = Flask(__name__)
     app.config.from_object(configurations[config])
-    database.init_app(app)
+    db.init_app(app)
     bcrypt.init_app(app)
 
     return app

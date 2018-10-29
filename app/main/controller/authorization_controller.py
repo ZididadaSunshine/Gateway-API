@@ -21,7 +21,7 @@ class Login(Resource):
 @api.route('logout')
 class Logout(Resource):
     @api.response(AuthorizationResponse.Success, 'Logout successful.')
-    @api.doc('Logout from a session. Succeeds only if the user is logged in.', security='jwt')
+    @api.doc('Logout from a session.', security='jwt')
     @require_authorization
     def get(self):
         return logout()

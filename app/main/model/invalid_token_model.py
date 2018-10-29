@@ -1,9 +1,7 @@
-from sqlalchemy import Column, String, DateTime, Integer
-
-from app.main import database
+from app.main import db
 
 
-class InvalidToken(database.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    creation_date = Column(DateTime, nullable=False)
-    token = Column(String(255), unique=True, nullable=False)
+class InvalidToken(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    creation_date = db.Column(db.DateTime, nullable=False)
+    token = db.Column(db.String(255), unique=True, nullable=False)

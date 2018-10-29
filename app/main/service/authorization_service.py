@@ -3,7 +3,7 @@ import datetime
 import jwt
 from flask import request
 
-from app.main import database
+from app.main import db
 from app.main.config import secret
 from app.main.model.account_model import Account
 from app.main.model.invalid_token_model import InvalidToken
@@ -15,11 +15,18 @@ class AuthorizationResponse:
     Unauthorized = 401
 
 
+def get_account_id():
+    return get_account_id_from_token(get_token())
+
+
 def get_token():
     return request.headers.get('Authorization')
 
 
-def decode_token(token):
+def get_account_id_from_token(token):
+    if not token:
+        return None
+
     try:
         return jwt.decode(token, secret)['sub']
     except jwt.ExpiredSignatureError:
@@ -50,7 +57,7 @@ def logout():
     if token:
         invalid_token = InvalidToken(token=token, creation_date=datetime.datetime.utcnow())
 
-        database.session.add(invalid_token)
-        database.session.commit()
+        db.session.add(invalid_token)
+        db.session.commit()
 
     return dict(message='Logout successful.'), AuthorizationResponse.Success

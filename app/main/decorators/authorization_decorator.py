@@ -1,7 +1,7 @@
 from functools import wraps
 
 from app.main.model.invalid_token_model import InvalidToken
-from app.main.service.authorization_service import get_token, decode_token, AuthorizationResponse
+from app.main.service.authorization_service import get_token, get_account_id_from_token, AuthorizationResponse
 
 
 def require_authorization(func):
@@ -13,9 +13,9 @@ def require_authorization(func):
             # Check that token is valid
             invalid_token = InvalidToken.query.filter_by(token=token).first()
             if not invalid_token:
-                decoded_token = decode_token(token)
+                account_id = get_account_id_from_token(token)
 
-                if decoded_token:
+                if account_id:
                     return func(*args, **kwargs)
 
         # Either no token was provided or it is invalid. Either way, return an unauthorized response

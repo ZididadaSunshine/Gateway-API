@@ -1,18 +1,18 @@
 import flask_bcrypt
-from sqlalchemy import Column, Integer, String, DateTime
 
-from app.main import database
+from app.main import db
 
 
-class Account(database.Model):
+class Account(db.Model):
     """ SQLAlchemy model for accounts. """
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    creation_date = Column(DateTime, nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
-    first_name = Column(String(50), nullable=False)
-    last_name = Column(String(50), nullable=False)
-    password = Column(String(255))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    creation_date = db.Column(db.DateTime, nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    brands = db.relationship('Brand', backref='brand', lazy=True)
 
     """ Hashes and sets a cleartext password for the account. """
     def set_password(self, password):
