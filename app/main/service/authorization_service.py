@@ -35,6 +35,21 @@ def get_account_id_from_token(token):
         return None
 
 
+def get_is_authorized():
+    token = get_token()
+
+    if token:
+        # Check that token is valid
+        invalid_token = InvalidToken.query.filter_by(token=token).first()
+        if not invalid_token:
+            account_id = get_account_id_from_token(token)
+
+            if account_id:
+                return True
+
+    return False
+
+
 def encode_token(account):
     payload = {'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1), 'iat': datetime.datetime.utcnow(),
                'sub': account.id}
@@ -44,7 +59,7 @@ def encode_token(account):
 
 
 def login(data):
-    account = Account.query.filter_by(email=data['email']).first()
+    account = Account.query.filter(Account.email.ilike(data['email'])).first()
     if account and account.check_password(data['password']):
         return dict(message='Successful login.', token=encode_token(account)), AuthorizationResponse.Success
     else:

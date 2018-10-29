@@ -1,7 +1,5 @@
 import datetime
 
-from sqlalchemy import and_
-
 from app.main import db
 from app.main.model.brand_model import Brand
 
@@ -10,6 +8,7 @@ class BrandServiceResponse:
     Success = 200
     Created = 201
     AlreadyExists = 400
+    DoesNotExist = 404
 
 
 def get_brands_from_account(account_id):
@@ -18,8 +17,21 @@ def get_brands_from_account(account_id):
     return brands
 
 
+def get_brand_by_id(account_id, brand_id):
+    return Brand.query.filter((Brand.account_id == account_id) & (Brand.id == brand_id)).first()
+
+
+def get_brand_by_name(account_id, name):
+    return Brand.query.filter((Brand.account_id == account_id) & (Brand.name.ilike(name))).first()
+
+
+def delete_brand(brand):
+    db.session.delete(brand)
+    db.session.commit()
+
+
 def create_brand(account_id, data):
-    existing = Brand.query.filter((Brand.account_id == account_id) & (Brand.name == data['name'])).first()
+    existing = get_brand_by_name(account_id, data['name'])
 
     if not existing:
         brand = Brand(name=data['name'], creation_date=datetime.datetime.utcnow(), account_id=account_id)

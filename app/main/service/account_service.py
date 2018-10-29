@@ -10,7 +10,7 @@ class AccountServiceResponse:
 
 
 def create_account(data):
-    existing = Account.query.filter_by(email=data['email']).first()
+    existing = Account.query.filter(Account.email.ilike(data['email'])).first()
 
     if not existing:
         account = Account(email=data['email'], first_name=data['first_name'], last_name=data['last_name'],
