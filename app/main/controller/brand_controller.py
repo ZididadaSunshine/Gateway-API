@@ -70,4 +70,20 @@ class BrandResource(Resource):
         if not get_is_authorized():
             api.abort(AuthorizationResponse.Unauthorized)
 
+        # TODO
+         
         pass
+
+
+@api.route('/<int:public:id>/synonym')
+@api.param('public_id', 'A brand identifier associated with the authorized account.')
+class SynonymsResource(Resource):
+    @api.doc('Retrieve all synonyms associated with the brand.', security='jwt')
+    def get(self, public_id):
+        if not get_is_authorized():
+            api.abort(AuthorizationResponse.Unauthorized)
+
+        brand = get_brand_by_id(get_account_id(), public_id)
+
+        if not brand:
+            api.abort(BrandServiceResponse.DoesNotExist)
