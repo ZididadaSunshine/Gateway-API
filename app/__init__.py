@@ -12,6 +12,6 @@ api = Api(blueprint, title='SW7 Gateway API', version='1.0', authorizations={'jw
                                                                                      'name': 'Authorization'}})
 
 # Add namespaces to API
-api.add_namespace(authorization_namespace, path='/')
-api.add_namespace(account_namespace, path='/account')
-api.add_namespace(brand_namespace, path='/brand')
+api.add_namespace(authorization_namespace, path='/authorization')
+api.add_namespace(account_namespace, path='/accounts')
+api.add_namespace(brand_namespace, path='/brands')

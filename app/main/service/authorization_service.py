@@ -61,9 +61,9 @@ def encode_token(account):
 def login(data):
     account = Account.query.filter(Account.email.ilike(data['email'])).first()
     if account and account.check_password(data['password']):
-        return dict(message='Successful login.', token=encode_token(account)), AuthorizationResponse.Success
+        return dict(success=True, token=encode_token(account)), AuthorizationResponse.Success
     else:
-        return dict(message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
+        return dict(success=False, message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 
 
 def logout():
@@ -75,4 +75,4 @@ def logout():
         db.session.add(invalid_token)
         db.session.commit()
 
-    return dict(message='Logout successful.'), AuthorizationResponse.Success
+    return dict(success=True), AuthorizationResponse.Success

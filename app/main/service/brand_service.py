@@ -29,6 +29,21 @@ def delete_brand(brand):
     db.session.delete(brand)
     db.session.commit()
 
+    return dict(success=True), BrandServiceResponse.Success
+
+
+def update_brand(account_id, brand, data):
+    # Check if there is an existing brand with the name
+    existing = get_brand_by_name(account_id, data['name'])
+    if existing and existing.id != brand.id:
+        return dict(success=True,
+                    message='You already have a brand with that name.'), BrandServiceResponse.AlreadyExists
+
+    Brand.query.filter_by(id=brand.id).update(dict(name=data['name']))
+    db.session.commit()
+
+    return dict(success=True), BrandServiceResponse.Success
+
 
 def create_brand(account_id, data):
     existing = get_brand_by_name(account_id, data['name'])
@@ -39,6 +54,7 @@ def create_brand(account_id, data):
         db.session.add(brand)
         db.session.commit()
 
-        return dict(message='Brand successfully created.'), BrandServiceResponse.Created
+        return dict(success=True), BrandServiceResponse.Created
     else:
-        return dict(message=f'Your account already has a brand with that name.'), BrandServiceResponse.AlreadyExists
+        return dict(success=False,
+                    message=f'Your account already has a brand with that name.'), BrandServiceResponse.AlreadyExists

@@ -14,7 +14,7 @@ class Account(db.Model):
     password = db.Column(db.String(255), nullable=False)
     brands = db.relationship('Brand', backref='brand', lazy=True)
 
-    """ Hashes and sets a cleartext password for the account. """
+    """ Hashes and sets a password for the account. """
     def set_password(self, password):
         self.password = flask_bcrypt.generate_password_hash(password)
 
@@ -23,4 +23,4 @@ class Account(db.Model):
         return flask_bcrypt.check_password_hash(self.password, password)
 
     def __repr__(self):
-        return f"<User {self.email}'>"
+        return f"<Account {self.email}'>"

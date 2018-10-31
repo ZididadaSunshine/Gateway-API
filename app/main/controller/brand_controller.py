@@ -4,7 +4,7 @@ from flask_restplus import Resource
 from app.main.dto.brand_dto import BrandDTO
 from app.main.service.authorization_service import get_account_id, get_is_authorized, AuthorizationResponse
 from app.main.service.brand_service import get_brands_from_account, create_brand, BrandServiceResponse, get_brand_by_id, \
-    delete_brand
+    delete_brand, update_brand
 
 api = BrandDTO.api
 
@@ -32,6 +32,7 @@ class BrandsResource(Resource):
 
 @api.route('/<int:public_id>')
 @api.param('public_id', 'A brand identifier associated with the authorized account.')
+@api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
 class BrandResource(Resource):
     @api.response(BrandServiceResponse.Success, 'The brand was successfully deleted.')
     @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
@@ -49,7 +50,6 @@ class BrandResource(Resource):
 
         return dict(success=True)
 
-    @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.doc('Retrieve details about the brand.', security='jwt')
     @api.marshal_with(BrandDTO.brand)
     def get(self, public_id):
@@ -66,16 +66,20 @@ class BrandResource(Resource):
     @api.response(BrandServiceResponse.Success, 'Brand details updated successfully.')
     @api.response(BrandServiceResponse.AlreadyExists, 'The brand cannot be renamed to an existing brand.')
     @api.doc('Update details about the brand.', security='jwt')
+    @api.expect(BrandDTO.brand, validate=True)
     def put(self, public_id):
         if not get_is_authorized():
             api.abort(AuthorizationResponse.Unauthorized)
 
-        # TODO
-         
-        pass
+        brand = get_brand_by_id(get_account_id(), public_id)
+
+        if not brand:
+            api.abort(BrandServiceResponse.DoesNotExist)
+
+        return update_brand(account_id=get_account_id(), brand=brand, data=request.json)
 
 
-@api.route('/<int:public:id>/synonym')
+@api.route('/<int:public_id>/synonyms')
 @api.param('public_id', 'A brand identifier associated with the authorized account.')
 class SynonymsResource(Resource):
     @api.doc('Retrieve all synonyms associated with the brand.', security='jwt')

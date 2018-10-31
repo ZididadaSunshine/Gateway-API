@@ -20,6 +20,6 @@ def create_account(data):
         db.session.add(account)
         db.session.commit()
 
-        return dict(message='Account successfully created.'), AccountServiceResponse.Created
+        return dict(success=True), AccountServiceResponse.Created
     else:
-        return dict(message=f'E-mail address is already in use.'), AccountServiceResponse.AlreadyExists
+        return dict(success=False, message=f'E-mail address is already in use.'), AccountServiceResponse.AlreadyExists

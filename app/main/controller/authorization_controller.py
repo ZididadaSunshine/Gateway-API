@@ -7,7 +7,7 @@ from app.main.service.authorization_service import AuthorizationResponse, login,
 api = AuthorizationDTO.api
 
 
-@api.route('login')
+@api.route('/login')
 class Login(Resource):
     @api.response(AuthorizationResponse.Success, 'Account login successful.')
     @api.response(AuthorizationResponse.InvalidCredentials, 'Invalid or non-existing account credentials entered.')
@@ -17,7 +17,7 @@ class Login(Resource):
         return login(request.json)
 
 
-@api.route('logout')
+@api.route('/logout')
 class Logout(Resource):
     @api.response(AuthorizationResponse.Success, 'Logout successful.')
     @api.doc('Logout from a session.', security='jwt')
