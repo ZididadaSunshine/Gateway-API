@@ -5,6 +5,7 @@ from app.main.dto.brand_dto import BrandDTO
 from app.main.service.authorization_service import get_account_id, get_is_authorized, AuthorizationResponse
 from app.main.service.brand_service import get_brands_from_account, create_brand, BrandServiceResponse, get_brand_by_id, \
     delete_brand, update_brand
+from app.main.service.synonym_service import add_synonym
 
 api = BrandDTO.api
 
@@ -91,3 +92,15 @@ class SynonymsResource(Resource):
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
+
+    @api.expect(BrandDTO.synonym, validate=True)
+    def post(self, public_id):
+        if not get_is_authorized():
+            api.abort(AuthorizationResponse.Unauthorized)
+
+        brand = get_brand_by_id(get_account_id(), public_id)
+
+        if not brand:
+            api.abort(BrandServiceResponse.DoesNotExist)
+
+        add_synonym(brand.id, request.json)
