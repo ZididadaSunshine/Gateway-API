@@ -70,7 +70,7 @@ class BrandResource(Resource):
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
 
-        return update_brand(account_id=get_account_id(), brand=brand, data=request.json)
+        return update_brand(account_id=get_account_id(), brand=brand, change_data=request.json)
 
 
 @api.route('/<int:brand_id>/synonyms')

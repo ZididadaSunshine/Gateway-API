@@ -9,13 +9,13 @@ class AccountServiceResponse:
     AlreadyExists = 400
 
 
-def create_account(data):
-    existing = Account.query.filter(Account.email.ilike(data['email'])).first()
+def create_account(user_data):
+    existing = Account.query.filter(Account.email.ilike(user_data['email'])).first()
 
     if not existing:
-        account = Account(email=data['email'], first_name=data['first_name'], last_name=data['last_name'],
+        account = Account(email=user_data['email'], first_name=user_data['first_name'], last_name=user_data['last_name'],
                           creation_date=datetime.datetime.utcnow())
-        account.set_password(data['password'])
+        account.set_password(user_data['password'])
 
         db.session.add(account)
         db.session.commit()

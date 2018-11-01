@@ -1,10 +1,10 @@
-from app.main.service.authorization_service import get_is_authorized
+from app.main.service.authorization_service import is_authorized
 
 
 def auth_required(api):
     def wrapper(func):
         def check_auth(*args, **kwargs):
-            if not get_is_authorized():
+            if not is_authorized():
                 api.abort(403)
 
             return func(*args, **kwargs)

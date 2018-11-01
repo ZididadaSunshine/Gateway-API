@@ -35,7 +35,7 @@ def get_account_id_from_token(token):
         return None
 
 
-def get_is_authorized():
+def is_authorized():
     token = get_token()
 
     if token:
@@ -58,9 +58,9 @@ def encode_token(account):
     return jwt.encode(payload, secret, algorithm='HS256').decode()
 
 
-def login(data):
-    account = Account.query.filter(Account.email.ilike(data['email'])).first()
-    if account and account.check_password(data['password']):
+def login(credentials):
+    account = Account.query.filter(Account.email.ilike(credentials['email'])).first()
+    if account and account.check_password(credentials['password']):
         return dict(success=True, token=encode_token(account)), AuthorizationResponse.Success
     else:
         return dict(success=False, message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials

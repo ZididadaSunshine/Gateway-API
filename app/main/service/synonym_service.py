@@ -17,9 +17,9 @@ def get_synonyms(brand_id):
     return Synonym.query.join(BrandSynonym, (Synonym.id == BrandSynonym.synonym_id) & (BrandSynonym.brand_id == brand_id)).all()
 
 
-def add_synonym(brand_id, data):
+def add_synonym(brand_id, synonym_data):
     """ Add a synonym to be associate with a brand. """
-    synonym = data['synonym']
+    synonym = synonym_data['synonym']
 
     # Check if the synonym already exists
     # If it does not exist, create it

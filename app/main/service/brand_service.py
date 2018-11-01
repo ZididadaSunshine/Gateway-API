@@ -32,24 +32,24 @@ def delete_brand(brand):
     return dict(success=True), BrandServiceResponse.Success
 
 
-def update_brand(account_id, brand, data):
+def update_brand(account_id, brand, change_data):
     # Check if there is an existing brand with the name
-    existing = get_brand_by_name(account_id, data['name'])
+    existing = get_brand_by_name(account_id, change_data['name'])
     if existing and existing.id != brand.id:
         return dict(success=True,
                     message='You already have a brand with that name.'), BrandServiceResponse.AlreadyExists
 
-    Brand.query.filter_by(id=brand.id).update(dict(name=data['name']))
+    Brand.query.filter_by(id=brand.id).update(dict(name=change_data['name']))
     db.session.commit()
 
     return dict(success=True), BrandServiceResponse.Success
 
 
-def create_brand(account_id, data):
-    existing = get_brand_by_name(account_id, data['name'])
+def create_brand(account_id, brand_data):
+    existing = get_brand_by_name(account_id, brand_data['name'])
 
     if not existing:
-        brand = Brand(name=data['name'], creation_date=datetime.datetime.utcnow(), account_id=account_id)
+        brand = Brand(name=brand_data['name'], creation_date=datetime.datetime.utcnow(), account_id=account_id)
 
         db.session.add(brand)
         db.session.commit()
