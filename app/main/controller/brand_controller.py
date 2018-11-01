@@ -6,7 +6,7 @@ from app.main.dto.brand_dto import BrandDTO
 from app.main.service.authorization_service import get_account_id
 from app.main.service.brand_service import get_brands_from_account, create_brand, BrandServiceResponse, get_brand_by_id, \
     delete_brand, update_brand
-from app.main.service.synonym_service import add_synonym, get_synonyms
+from app.main.service.synonym_service import add_synonym, get_synonyms, delete_synonym
 
 api = BrandDTO.api
 
@@ -28,16 +28,16 @@ class BrandsResource(Resource):
         return create_brand(get_account_id(), request.json)
 
 
-@api.route('/<int:public_id>')
-@api.param('public_id', 'A brand identifier associated with the authorized account.')
+@api.route('/<int:brand_id>')
+@api.param('brand_id', 'A brand identifier associated with the authorized account.')
 @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
 class BrandResource(Resource):
     @api.response(BrandServiceResponse.Success, 'The brand was successfully deleted.')
     @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.doc('Delete the brand.', security='jwt')
     @auth_required(api)
-    def delete(self, public_id):
-        brand = get_brand_by_id(get_account_id(), public_id)
+    def delete(self, brand_id):
+        brand = get_brand_by_id(get_account_id(), brand_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
@@ -47,10 +47,11 @@ class BrandResource(Resource):
         return dict(success=True)
 
     @api.doc('Retrieve details about the brand.', security='jwt')
+    @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.marshal_with(BrandDTO.brand)
     @auth_required(api)
-    def get(self, public_id):
-        brand = get_brand_by_id(get_account_id(), public_id)
+    def get(self, brand_id):
+        brand = get_brand_by_id(get_account_id(), brand_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
@@ -59,11 +60,12 @@ class BrandResource(Resource):
 
     @api.response(BrandServiceResponse.Success, 'Brand details updated successfully.')
     @api.response(BrandServiceResponse.AlreadyExists, 'The brand cannot be renamed to an existing brand.')
+    @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.doc('Update details about the brand.', security='jwt')
     @api.expect(BrandDTO.brand, validate=True)
     @auth_required(api)
-    def put(self, public_id):
-        brand = get_brand_by_id(get_account_id(), public_id)
+    def put(self, brand_id):
+        brand = get_brand_by_id(get_account_id(), brand_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
@@ -71,26 +73,45 @@ class BrandResource(Resource):
         return update_brand(account_id=get_account_id(), brand=brand, data=request.json)
 
 
-@api.route('/<int:public_id>/synonyms')
-@api.param('public_id', 'A brand identifier associated with the authorized account.')
-class SynonymsResource(Resource):
+@api.route('/<int:brand_id>/synonyms')
+@api.param('brand_id', 'A brand identifier associated with the authorized account.')
+class BrandSynonymsResource(Resource):
+    @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.doc('Retrieve all synonyms associated with the brand.', security='jwt')
     @auth_required(api)
-    def get(self, public_id):
-        brand = get_brand_by_id(get_account_id(), public_id)
+    def get(self, brand_id):
+        brand = get_brand_by_id(get_account_id(), brand_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
 
-        return get_synonyms(brand.id)
+        synonyms = get_synonyms(brand.id)
 
+        # Instead of returning the model for each synonym, we just return the synonym itself
+        return [synonym.synonym for synonym in synonyms]
+
+    @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.expect(BrandDTO.synonym, validate=True)
     @api.doc('Create a new synonym to be associated with the brand.', security='jwt')
     @auth_required(api)
-    def post(self, public_id):
-        brand = get_brand_by_id(get_account_id(), public_id)
+    def post(self, brand_id):
+        brand = get_brand_by_id(get_account_id(), brand_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
 
         return add_synonym(brand.id, request.json)
+
+
+@api.route('/<int:brand_id>/synonyms/<string:synonym>')
+class BrandSynonymResource(Resource):
+    @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
+    @api.doc('Delete a synonym\'s association with a brand.', security='jwt')
+    @auth_required(api)
+    def delete(self, brand_id, synonym):
+        brand = get_brand_by_id(get_account_id(), brand_id)
+
+        if not brand:
+            api.abort(BrandServiceResponse.DoesNotExist)
+
+        return delete_synonym(brand_id, synonym)
