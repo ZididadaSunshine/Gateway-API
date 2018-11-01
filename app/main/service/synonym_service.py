@@ -32,10 +32,10 @@ def add_synonym(brand_id, synonym_data):
     # If it does not exist, create it
     existing = Synonym.query.filter(Synonym.synonym.ilike(synonym)).first()
     if not existing:
-        synonym = Synonym(synonym=synonym)
+        synonym = Synonym(synonym=synonym.lower())  # Always force lowercase synonym names
 
         db.session.add(synonym)
-        db.session.flush()  # Needed to get the new id, though the row is not visible to other transactions
+        db.session.flush()
 
         # Refresh the current session in order to get the new synonym
         db.session.refresh(synonym)
