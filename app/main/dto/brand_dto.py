@@ -9,6 +9,3 @@ class BrandDTO:
         'name': fields.String(required=True, description='Name of the brand.'),
     })
 
-    synonym = api.model('Synonym details', {
-        'synonym': fields.String(required=True, description='A synonym string.')
-    })

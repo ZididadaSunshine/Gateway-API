@@ -3,10 +3,11 @@ from flask_restplus import Resource
 
 from app.main.decorator.auth_decorator import auth_required
 from app.main.dto.brand_dto import BrandDTO
+from app.main.dto.synonym_dto import SynonymDTO
 from app.main.service.authorization_service import get_account_id
 from app.main.service.brand_service import get_brands_from_account, create_brand, BrandServiceResponse, get_brand_by_id, \
     delete_brand, update_brand
-from app.main.service.synonym_service import add_synonym, get_synonyms, delete_synonym
+from app.main.service.synonym_service import add_synonym, get_brand_synonyms, delete_synonym
 
 api = BrandDTO.api
 
@@ -85,13 +86,13 @@ class BrandSynonymsResource(Resource):
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
 
-        synonyms = get_synonyms(brand.id)
+        synonyms = get_brand_synonyms(brand.id)
 
         # Instead of returning the model for each synonym, we just return the synonym itself
         return [synonym.synonym for synonym in synonyms]
 
     @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
-    @api.expect(BrandDTO.synonym, validate=True)
+    @api.expect(SynonymDTO.synonym, validate=True)
     @api.doc('Create a new synonym to be associated with the brand.', security='jwt')
     @auth_required(api)
     def post(self, brand_id):

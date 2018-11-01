@@ -12,7 +12,14 @@ class SynonymServiceResponse:
     DoesNotExist = 404
 
 
-def get_synonyms(brand_id):
+def get_active_synonyms():
+    """ Get a list of synonyms that are currently associated with a brand.
+        Returns how many associations each synonym has. """
+    return db.session.query(Synonym.synonym, db.func.count(Synonym.synonym)).join(Synonym.brands).\
+        group_by(Synonym.id).all()
+
+
+def get_brand_synonyms(brand_id):
     """ Get the synonyms associated with a brand. """
     return Synonym.query.join(BrandSynonym, (Synonym.id == BrandSynonym.synonym_id) & (BrandSynonym.brand_id == brand_id)).all()
 
