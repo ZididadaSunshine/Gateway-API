@@ -10,6 +10,5 @@ class BrandDTO:
     })
 
     synonym = api.model('Synonym details', {
-        'identifier': fields.String(required=True,
-                                    description='The identifier for the synonym, i.e. the synonym itself.')
+        'synonym': fields.String(required=True, description='A synonym string.')
     })

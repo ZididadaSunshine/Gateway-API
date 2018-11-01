@@ -1,5 +1,5 @@
 from app.main import db
-from app.main.model import brand_synonym_association
+from app.main.model.brand_synonym_association import BrandSynonym
 
 
 class Synonym(db.Model):
@@ -8,4 +8,4 @@ class Synonym(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # To avoid redundancy, synonyms are unique
     synonym = db.Column(db.String(255), unique=True, nullable=False)
-    brands = db.relationship("Brand", secondary=brand_synonym_association, back_populates="synonyms")
+    brands = db.relationship("Brand", secondary=BrandSynonym.__table__, back_populates="synonyms")

@@ -18,15 +18,15 @@ def add_synonym(brand_id, data):
     synonym = data['synonym']
 
     # Check if the synonym already exists
-    existing = Synonym.query.filter_by(identifier=synonym)
+    existing = Synonym.query.filter_by(synonym=synonym).first()
     if not existing:
-        synonym = Synonym(identifier=synonym)
+        synonym = Synonym(synonym=synonym)
 
         db.session.add(synonym)
         db.session.commit()
 
-        # Refresh the current session in order to get the id of the new synonym
-        db.session.refresh()
+        # Refresh the current session in order to get the new synonym
+        db.session.refresh(synonym)
         existing = synonym
 
-        print(existing.id)
+    print(existing.id)

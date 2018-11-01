@@ -1,11 +1,12 @@
 from flask import request
 from flask_restplus import Resource
 
+from app.main.decorator.auth_decorator import auth_required
 from app.main.dto.brand_dto import BrandDTO
-from app.main.service.authorization_service import get_account_id, get_is_authorized, AuthorizationResponse
+from app.main.service.authorization_service import get_account_id
 from app.main.service.brand_service import get_brands_from_account, create_brand, BrandServiceResponse, get_brand_by_id, \
     delete_brand, update_brand
-from app.main.service.synonym_service import add_synonym
+from app.main.service.synonym_service import add_synonym, get_synonyms
 
 api = BrandDTO.api
 
@@ -14,20 +15,16 @@ api = BrandDTO.api
 class BrandsResource(Resource):
     @api.doc('Retrieves a list of all the brands associated with the authorized account.', security='jwt')
     @api.marshal_list_with(BrandDTO.brand)
+    @auth_required(api)
     def get(self):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         return get_brands_from_account(get_account_id())
 
     @api.response(BrandServiceResponse.Created, 'Brand successfully created.')
     @api.response(BrandServiceResponse.AlreadyExists, 'The authorized account already has a brand with that name.')
     @api.expect(BrandDTO.brand, validate=True)
     @api.doc('Create a new brand to be associated with the authorized account.', security='jwt')
+    @auth_required(api)
     def post(self):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         return create_brand(get_account_id(), request.json)
 
 
@@ -38,10 +35,8 @@ class BrandResource(Resource):
     @api.response(BrandServiceResponse.Success, 'The brand was successfully deleted.')
     @api.response(BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.doc('Delete the brand.', security='jwt')
+    @auth_required(api)
     def delete(self, public_id):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         brand = get_brand_by_id(get_account_id(), public_id)
 
         if not brand:
@@ -53,10 +48,8 @@ class BrandResource(Resource):
 
     @api.doc('Retrieve details about the brand.', security='jwt')
     @api.marshal_with(BrandDTO.brand)
+    @auth_required(api)
     def get(self, public_id):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         brand = get_brand_by_id(get_account_id(), public_id)
 
         if not brand:
@@ -68,10 +61,8 @@ class BrandResource(Resource):
     @api.response(BrandServiceResponse.AlreadyExists, 'The brand cannot be renamed to an existing brand.')
     @api.doc('Update details about the brand.', security='jwt')
     @api.expect(BrandDTO.brand, validate=True)
+    @auth_required(api)
     def put(self, public_id):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         brand = get_brand_by_id(get_account_id(), public_id)
 
         if not brand:
@@ -84,23 +75,22 @@ class BrandResource(Resource):
 @api.param('public_id', 'A brand identifier associated with the authorized account.')
 class SynonymsResource(Resource):
     @api.doc('Retrieve all synonyms associated with the brand.', security='jwt')
+    @auth_required(api)
     def get(self, public_id):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         brand = get_brand_by_id(get_account_id(), public_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
+
+        return get_synonyms(brand.id)
 
     @api.expect(BrandDTO.synonym, validate=True)
+    @api.doc('Create a new synonym to be associated with the brand.', security='jwt')
+    @auth_required(api)
     def post(self, public_id):
-        if not get_is_authorized():
-            api.abort(AuthorizationResponse.Unauthorized)
-
         brand = get_brand_by_id(get_account_id(), public_id)
 
         if not brand:
             api.abort(BrandServiceResponse.DoesNotExist)
 
-        add_synonym(brand.id, request.json)
+        return add_synonym(brand.id, request.json)
