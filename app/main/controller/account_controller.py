@@ -11,7 +11,7 @@ api = AccountDTO.api
 class AccountsResource(Resource):
     @api.response(AccountServiceResponse.Created, 'Account successfully created.')
     @api.response(AccountServiceResponse.AlreadyExists, 'An account already exists with the requested e-mail.')
-    @api.doc('Register a new account')
+    @api.doc('Register a new account.')
     @api.expect(AccountDTO.account, validate=True)
     def post(self):
         return create_account(request.json)

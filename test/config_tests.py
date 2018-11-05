@@ -3,9 +3,10 @@ import unittest
 from flask_testing import TestCase
 
 from app.main import create_app
+from test.base_testcase import BaseTestCase
 
 
-class TestConfigTests(TestCase):
+class TestConfigTests(BaseTestCase):
     def create_app(self):
         return create_app('test')
 
@@ -22,7 +23,7 @@ class TestConfigTests(TestCase):
         self.assertIn('test.db', self.app.config['SQLALCHEMY_DATABASE_URI'])
 
 
-class ProductionConfigTests(TestCase):
+class ProductionConfigTests(BaseTestCase):
     def create_app(self):
         return create_app('prod')
 
@@ -39,7 +40,7 @@ class ProductionConfigTests(TestCase):
         self.assertIn('production.db', self.app.config['SQLALCHEMY_DATABASE_URI'])
 
 
-class DevelopmentConfigTests(TestCase):
+class DevelopmentConfigTests(BaseTestCase):
     def create_app(self):
         return create_app('dev')
 

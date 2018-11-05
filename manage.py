@@ -3,8 +3,8 @@ import unittest
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
-from app.main import create_app, db
 from app import blueprint
+from app.main import create_app, db
 
 app = create_app('dev')
 app.register_blueprint(blueprint)
