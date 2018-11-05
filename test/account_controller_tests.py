@@ -1,7 +1,8 @@
-import unittest
-
 import json
+import unittest
+from unittest import mock
 
+from app.main.service.account_service import AccountServiceResponse
 from test.base_testcase import BaseTestCase
 
 
@@ -19,12 +20,27 @@ class AccountControllerTests(BaseTestCase):
 
         self.assert400(response)
 
-    def test_create_succeeds(self):
+    @mock.patch('app.main.service.account_service.create_account')
+    def test_create_succeeds(self, mock_create):
+        # Mock a successful creation
+        mock_create.return_value = dict(success=True), AccountServiceResponse.Created
+
         response = self.client.post('/accounts', data=json.dumps(BaseTestCase.AccountSample),
                                     content_type='application/json')
-        print(response)
 
-        self.assert200(response)
+        self.assertTrue(response.json['success'])
+        self.assertEquals(response.status_code, AccountServiceResponse.Created)
+
+    @mock.patch('app.main.service.account_service.create_account')
+    def test_create_fails(self, mock_create):
+        # Mock a successful creation
+        mock_create.return_value = dict(success=False), AccountServiceResponse.AlreadyExists
+
+        response = self.client.post('/accounts', data=json.dumps(BaseTestCase.AccountSample),
+                                    content_type='application/json')
+
+        self.assertFalse(response.json['success'])
+        self.assertEquals(response.status_code, AccountServiceResponse.AlreadyExists)
 
 
 if __name__ == "__main__":
