@@ -11,16 +11,26 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+    ENV = 'development'
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(basedir, "development.db")}'
 
 
+class TestingConfig(Config):
+    ENV = 'test'
+    TESTING = True
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(basedir, "test.db")}'
+
+
 class ProductionConfig(Config):
+    ENV = 'production'
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(basedir, "production.db")}'
 
 
 configurations = dict(dev=DevelopmentConfig,
-                      prod=ProductionConfig)
+                      prod=ProductionConfig,
+                      test=TestingConfig)
 
 secret = Config.SECRET_KEY

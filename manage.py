@@ -1,3 +1,5 @@
+import unittest
+
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
@@ -16,10 +18,18 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
+def test():
+    tests = unittest.TestLoader().discover('test', pattern='*_tests.py')
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+
+    if not result.wasSuccessful():
+        print("Tests failed")
+
+
+@manager.command
 def run():
     app.run()
 
 
 if __name__ == '__main__':
-    run()
-   # manager.run()
+    manager.run()
