@@ -24,4 +24,4 @@ class Logout(Resource):
     @api.doc('Logout from a session.', security='jwt')
     @auth_required(api)
     def get(self):
-        return service.logout()
+        return service.logout(service.get_token())

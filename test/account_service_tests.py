@@ -1,8 +1,8 @@
 import unittest
 
 from app.main.service.account_service import create_account, AccountServiceResponse
-from test.base_testcase import BaseTestCase
-from test.database_testcase import DatabaseTestCase
+from test.base.base_testcase import BaseTestCase
+from test.base.database_testcase import DatabaseTestCase
 
 
 class AccountServiceTests(DatabaseTestCase):

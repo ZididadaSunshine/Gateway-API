@@ -1,4 +1,4 @@
-from test.base_testcase import BaseTestCase
+from test.base.base_testcase import BaseTestCase
 from app.main import db
 
 

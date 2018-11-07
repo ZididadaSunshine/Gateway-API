@@ -35,9 +35,7 @@ def get_account_id_from_token(token):
         return None
 
 
-def is_authorized():
-    token = get_token()
-
+def is_authorized(token=None):
     if token:
         # Check that token is valid
         invalid_token = InvalidToken.query.filter_by(token=token).first()
@@ -66,9 +64,7 @@ def login(credentials):
         return dict(success=False, message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 
 
-def logout():
-    token = get_token()
-
+def logout(token=None):
     if token:
         invalid_token = InvalidToken(token=token, creation_date=datetime.datetime.utcnow())
 

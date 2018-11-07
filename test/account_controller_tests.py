@@ -3,7 +3,7 @@ import unittest
 from unittest import mock
 
 from app.main.service.account_service import AccountServiceResponse
-from test.base_testcase import BaseTestCase
+from test.base.base_testcase import BaseTestCase
 
 
 class AccountControllerTests(BaseTestCase):
