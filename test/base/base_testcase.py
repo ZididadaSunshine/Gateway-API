@@ -5,7 +5,14 @@ from app.main import create_app
 
 
 class BaseTestCase(TestCase):
-    AccountSample = dict(email='test@example.com', first_name='Test', last_name='Account', password='example')
+    @staticmethod
+    def _get_sample_account():
+        # Returned in a function in order to make it immutable
+        return dict(email='test@example.com', first_name='Test', last_name='Account', password='example')
+
+    @staticmethod
+    def _get_sample_credentials():
+        return dict(email='test@example.com', password='example')
 
     def create_app(self):
         app = create_app('test')

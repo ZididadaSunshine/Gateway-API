@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Resource
 
-from app.main.decorator.auth_decorator import auth_required
+from app.main.controller.authorization_controller import auth_required
 from app.main.dto.brand_dto import BrandDTO
 from app.main.dto.synonym_dto import SynonymDTO
 from app.main.service.authorization_service import get_account_id

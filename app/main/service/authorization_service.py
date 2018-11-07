@@ -19,10 +19,6 @@ def get_account_id():
     return get_account_id_from_token(get_token())
 
 
-def get_token():
-    return request.headers.get('Authorization')
-
-
 def get_account_id_from_token(token):
     if not token:
         return None
