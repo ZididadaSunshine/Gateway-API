@@ -10,16 +10,16 @@ class AccountServiceTests(DatabaseTestCase):
                      test_account_existence=True):
         response, code = create_account(details)
 
-        self.assertEquals(response['success'], expected_success)
-        self.assertEquals(code, expected_code)
+        self.assertEqual(response['success'], expected_success)
+        self.assertEqual(code, expected_code)
 
         if test_account_existence:
             account = Account.query.filter_by(email=details['email']).first()
 
             self.assertIsNotNone(account)
-            self.assertEquals(account.email, details['email'])
-            self.assertEquals(account.first_name, details['first_name'])
-            self.assertEquals(account.last_name, details['last_name'])
+            self.assertEqual(account.email, details['email'])
+            self.assertEqual(account.first_name, details['first_name'])
+            self.assertEqual(account.last_name, details['last_name'])
             self.assertTrue(account.check_password(details['password']))
 
     def test_create_single(self):

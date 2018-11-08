@@ -32,7 +32,7 @@ class AccountControllerTests(BaseTestCase):
                                     content_type='application/json')
 
         self.assertTrue(response.json['success'])
-        self.assertEquals(response.status_code, AccountServiceResponse.Created)
+        self.assertEqual(response.status_code, AccountServiceResponse.Created)
 
     @mock.patch('app.main.service.account_service.create_account')
     def test_create_fails(self, mock_create):
@@ -44,7 +44,7 @@ class AccountControllerTests(BaseTestCase):
                                     content_type='application/json')
 
         self.assertFalse(response.json['success'])
-        self.assertEquals(response.status_code, AccountServiceResponse.AlreadyExists)
+        self.assertEqual(response.status_code, AccountServiceResponse.AlreadyExists)
 
 
 if __name__ == "__main__":

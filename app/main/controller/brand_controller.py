@@ -18,7 +18,7 @@ class BrandsResource(Resource):
     @api.marshal_list_with(BrandDTO.brand)
     @auth_required(api)
     def get(self):
-        return brand_service.get_brands_from_account(get_account_id())
+        return brand_service.get_brands_by_account(get_account_id())
 
     @api.response(brand_service.BrandServiceResponse.Created, 'Brand successfully created.')
     @api.response(brand_service.BrandServiceResponse.AlreadyExists, 'The authorized account already has a brand with that name.')

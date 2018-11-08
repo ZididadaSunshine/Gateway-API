@@ -42,7 +42,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         login_dict, login_code = login(self._get_sample_credentials())
 
         self.assertTrue(login_dict['success'])
-        self.assertEquals(login_code, AuthorizationResponse.Success)
+        self.assertEqual(login_code, AuthorizationResponse.Success)
         self.assertIn('token', login_dict)
 
     def test_existing_account_invalid(self):
@@ -55,14 +55,14 @@ class AuthorizationServiceTests(DatabaseTestCase):
         login_dict, login_code = login(invalid_credentials)
 
         self.assertFalse(login_dict['success'])
-        self.assertEquals(login_code, AuthorizationResponse.InvalidCredentials)
+        self.assertEqual(login_code, AuthorizationResponse.InvalidCredentials)
 
     def test_unexisting_account(self):
         """ Test that a login fails with an unexisting account."""
         login_dict, login_code = login(self._get_sample_credentials())
 
         self.assertFalse(login_dict['success'])
-        self.assertEquals(login_code, AuthorizationResponse.InvalidCredentials)
+        self.assertEqual(login_code, AuthorizationResponse.InvalidCredentials)
 
     def test_id_from_token(self):
         """ Test that an identifier can be extracted from a token """

@@ -32,7 +32,7 @@ def add_synonym(brand_id, synonym_data):
     # If it does not exist, create it
     existing = Synonym.query.filter(Synonym.synonym.ilike(synonym)).first()
     if not existing:
-        synonym = Synonym(synonym=synonym.lower())  # Always force lowercase synonym names
+        synonym = Synonym(synonym=synonym.lower())  # Always
 
         db.session.add(synonym)
         db.session.flush()

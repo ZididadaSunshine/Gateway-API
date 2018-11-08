@@ -11,7 +11,7 @@ class BrandServiceResponse:
     DoesNotExist = 404
 
 
-def get_brands_from_account(account_id):
+def get_brands_by_account(account_id):
     brands = Brand.query.filter_by(account_id=account_id).all()
 
     return brands
@@ -37,7 +37,7 @@ def update_brand(account_id, brand, change_data):
     existing = get_brand_by_name(account_id, change_data['name'])
     if existing and existing.id != brand.id:
         return dict(success=False,
-                    message='You already have a brand with that name.'), BrandServiceResponse.AlreadyExists
+                    message='Your account already has a brand with that name.'), BrandServiceResponse.AlreadyExists
 
     Brand.query.filter_by(id=brand.id).update(dict(name=change_data['name']))
     db.session.commit()
@@ -57,4 +57,4 @@ def create_brand(account_id, brand_data):
         return dict(success=True), BrandServiceResponse.Created
     else:
         return dict(success=False,
-                    message=f'Your account already has a brand with that name.'), BrandServiceResponse.AlreadyExists
+                    message='Your account already has a brand with that name.'), BrandServiceResponse.AlreadyExists
