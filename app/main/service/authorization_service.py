@@ -1,7 +1,6 @@
 import datetime
 
 import jwt
-from flask import request
 
 from app.main import db
 from app.main.config import secret

@@ -36,7 +36,7 @@ def update_brand(account_id, brand, change_data):
     # Check if there is an existing brand with the name
     existing = get_brand_by_name(account_id, change_data['name'])
     if existing and existing.id != brand.id:
-        return dict(success=True,
+        return dict(success=False,
                     message='You already have a brand with that name.'), BrandServiceResponse.AlreadyExists
 
     Brand.query.filter_by(id=brand.id).update(dict(name=change_data['name']))

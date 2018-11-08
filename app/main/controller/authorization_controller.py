@@ -15,7 +15,7 @@ def auth_required(api):
     def wrapper(func):
         def check_auth(*args, **kwargs):
             if not service.is_authorized(get_token()):
-                api.abort(403)
+                api.abort(service.AuthorizationResponse.Unauthorized)
 
             return func(*args, **kwargs)
 
