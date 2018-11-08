@@ -1,0 +1,5 @@
+README.md
+build_docker.sh
+.gitignore
+.git/
+migrations/
