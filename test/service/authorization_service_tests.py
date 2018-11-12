@@ -3,7 +3,7 @@ import datetime
 from app.main import db
 from app.main.model.account_model import Account
 from app.main.service.authorization_service import login, AuthorizationResponse, encode_token, \
-    get_account_id_from_token, is_authorized, logout
+    get_account_id_from_token, is_authorized, logout, is_key_correct
 from test.base.database_testcase import DatabaseTestCase
 
 
@@ -22,6 +22,14 @@ class AuthorizationServiceTests(DatabaseTestCase):
     def _add_account(account):
         db.session.add(account)
         db.session.commit()
+
+    def test_incorrect_key(self):
+        """ Test that an incorrect API key is rejected """
+        self.assertFalse(is_key_correct('not' + self.app.config['API_KEY']))
+
+    def test_correct_key(self):
+        """ Test that a correct API key is accepted """
+        self.assertTrue(is_key_correct(self.app.config['API_KEY']))
 
     def test_correct_password(self):
         """ Test that a correct password is accepted."""
