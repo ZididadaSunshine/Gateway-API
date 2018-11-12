@@ -79,7 +79,7 @@ class BrandSynonymsResource(Resource):
     @api.doc('Retrieve all synonyms associated with the brand.', security='jwt')
     @auth_required(api)
     def get(self, brand_id):
-        brand = brand_service.get_brand_by_id(get_account_id(), brand_id)
+        brand = brand_service.get_brand_by_id(get_account_id(get_token()), brand_id)
 
         if not brand:
             api.abort(brand_service.BrandServiceResponse.DoesNotExist)
