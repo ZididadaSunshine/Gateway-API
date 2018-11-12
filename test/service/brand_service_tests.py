@@ -2,6 +2,7 @@ import unittest
 
 from app.main import db
 from app.main.model.brand_model import Brand
+from app.main.model.synonym_model import Synonym
 from app.main.service.brand_service import create_brand, BrandServiceResponse, update_brand, get_brand_by_id, \
     get_brand_by_name, get_brands_by_account, delete_brand
 from test.base.database_testcase import DatabaseTestCase
@@ -25,6 +26,13 @@ class BrandServiceTests(DatabaseTestCase):
             self.assertIsNotNone(brand)
             self.assertEqual(brand.name, details['name'])
             self.assertEqual(brand.account_id, account_id)
+
+    def test_create_brand_has_synonym(self):
+        """ Test whether a newly created brand has a default synonym """
+        account = self._create_dummy_account('dummy@example.com')
+        create_brand(account.id, self.get_sample_brand())
+
+        self.assertTrue(Synonym.query.filter_by(synonym=self.get_sample_brand()['name'].lower()).scalar())
 
     def test_create_brand_single(self):
         """ Test whether a single brand can be created with no duplicates """

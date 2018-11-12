@@ -2,6 +2,7 @@ import datetime
 
 from app.main import db
 from app.main.model.brand_model import Brand
+from app.main.service.synonym_service import add_synonym
 
 
 class BrandServiceResponse:
@@ -45,14 +46,22 @@ def update_brand(account_id, brand, change_data):
     return dict(success=True), BrandServiceResponse.Success
 
 
-def create_brand(account_id, brand_data):
+def create_brand(account_id, brand_data, create_synonym=True):
     existing = get_brand_by_name(account_id, brand_data['name'])
 
     if not existing:
         brand = Brand(name=brand_data['name'], creation_date=datetime.datetime.utcnow(), account_id=account_id)
 
         db.session.add(brand)
-        db.session.commit()
+
+        if create_synonym:
+            db.session.flush()
+            db.session.refresh(brand)
+
+            # Add default synonym to the brand
+            add_synonym(brand.id, {'synonym': brand.name})
+        else:
+            db.session.commit()
 
         return dict(success=True), BrandServiceResponse.Created
     else:

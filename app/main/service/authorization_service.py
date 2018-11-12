@@ -1,6 +1,7 @@
 import datetime
 
 import jwt
+from flask import current_app
 
 from app.main import db
 from app.main.config import secret
@@ -41,6 +42,10 @@ def is_authorized(token=None):
                 return True
 
     return False
+
+
+def is_key_correct(key=None):
+    return key == current_app.config['API_KEY']
 
 
 def encode_token(account):
