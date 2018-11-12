@@ -6,6 +6,10 @@ from app.main import create_app
 
 class BaseTestCase(TestCase):
     @staticmethod
+    def get_sample_synonym():
+        return dict(synonym='aau')
+
+    @staticmethod
     def get_sample_brand():
         return dict(name='Aalborg University')
 
