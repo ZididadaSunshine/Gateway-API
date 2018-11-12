@@ -30,15 +30,15 @@ class BrandServiceTests(DatabaseTestCase):
         """ Test whether a single brand can be created with no duplicates """
         account = self._create_dummy_account('dummy@example.com')
 
-        self._test_create_brand(account.id, self._get_sample_brand())
+        self._test_create_brand(account.id, self.get_sample_brand())
 
     def test_create_brand_multiple_different_name(self):
         """ Test whether an account can have multiple brands with different names """
         account = self._create_dummy_account('dummy@example.com')
 
-        self._test_create_brand(account.id, self._get_sample_brand())
+        self._test_create_brand(account.id, self.get_sample_brand())
 
-        aux_details = self._get_sample_brand()
+        aux_details = self.get_sample_brand()
         aux_details['name'] += 'Not'
 
         self._test_create_brand(account.id, aux_details)
@@ -46,9 +46,9 @@ class BrandServiceTests(DatabaseTestCase):
     def test_create_brand_multiple_same_account(self):
         """ Test whether the same brand name cannot be created multiple times with the same account """
         account = self._create_dummy_account('dummy@example.com')
-        create_brand(account.id, self._get_sample_brand())
+        create_brand(account.id, self.get_sample_brand())
 
-        self._test_create_brand(account.id, self._get_sample_brand(), expected_success=False,
+        self._test_create_brand(account.id, self.get_sample_brand(), expected_success=False,
                                 expected_code=BrandServiceResponse.AlreadyExists, test_brand_existence=False,
                                 expected_message='Your account already has a brand with that name.')
 
@@ -58,8 +58,8 @@ class BrandServiceTests(DatabaseTestCase):
         second_account = self._create_dummy_account('second@example.com')
 
         # Run assertions for the two account ids
-        self._test_create_brand(first_account.id, self._get_sample_brand())
-        self._test_create_brand(second_account.id, self._get_sample_brand())
+        self._test_create_brand(first_account.id, self.get_sample_brand())
+        self._test_create_brand(second_account.id, self.get_sample_brand())
 
     def test_update_brand_no_duplicates(self):
         """ Test whether updating the name of a brand results in a new name """

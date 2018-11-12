@@ -9,7 +9,7 @@ from test.base.database_testcase import DatabaseTestCase
 
 class AuthorizationServiceTests(DatabaseTestCase):
     def _get_account(self):
-        sample = self._get_sample_account()
+        sample = self.get_sample_account()
         account = Account(email=sample['email'],
                           first_name=sample['first_name'],
                           last_name=sample['last_name'],
@@ -27,19 +27,19 @@ class AuthorizationServiceTests(DatabaseTestCase):
         """ Test that a correct password is accepted."""
         account = self._get_account()
 
-        self.assertTrue(account.check_password(self._get_sample_account()['password']))
+        self.assertTrue(account.check_password(self.get_sample_account()['password']))
 
     def test_incorrect_password(self):
         """ Test that an incorrect password is rejected."""
         account = self._get_account()
 
-        self.assertFalse(account.check_password('not' + self._get_sample_account()['password']))
+        self.assertFalse(account.check_password('not' + self.get_sample_account()['password']))
 
     def test_existing_account_valid(self):
         """ Test that an existing account can login with correct details """
         self._add_account(self._get_account())
 
-        login_dict, login_code = login(self._get_sample_credentials())
+        login_dict, login_code = login(self.get_sample_credentials())
 
         self.assertTrue(login_dict['success'])
         self.assertEqual(login_code, AuthorizationResponse.Success)
@@ -49,7 +49,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         """ Test that an existing account cannot login with wrong credentials."""
         self._add_account(self._get_account())
 
-        invalid_credentials = self._get_sample_credentials()
+        invalid_credentials = self.get_sample_credentials()
         invalid_credentials['password'] += 'invalid'
 
         login_dict, login_code = login(invalid_credentials)
@@ -59,7 +59,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
 
     def test_unexisting_account(self):
         """ Test that a login fails with an unexisting account."""
-        login_dict, login_code = login(self._get_sample_credentials())
+        login_dict, login_code = login(self.get_sample_credentials())
 
         self.assertFalse(login_dict['success'])
         self.assertEqual(login_code, AuthorizationResponse.InvalidCredentials)
@@ -77,7 +77,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         """ Test whether a session with a valid token is authorized """
         self._add_account(self._get_account())
 
-        token = login(self._get_sample_credentials())[0]['token']
+        token = login(self.get_sample_credentials())[0]['token']
 
         self.assertTrue(is_authorized(token))
 
@@ -85,7 +85,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         """ Test that the token is unauthorized after logging out """
         self._add_account(self._get_account())
 
-        token = login(self._get_sample_credentials())[0]['token']
+        token = login(self.get_sample_credentials())[0]['token']
         logout(token)
 
         self.assertFalse(is_authorized(token))
@@ -101,7 +101,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         """ Test that logout works with valid tokens"""
         self._add_account(self._get_account())
 
-        token = login(self._get_sample_credentials())[0]['token']
+        token = login(self.get_sample_credentials())[0]['token']
         logout_dict, logout_code = logout(token)
 
         self.assertTrue(logout_dict['success'])

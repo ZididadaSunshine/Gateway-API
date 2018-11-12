@@ -14,8 +14,8 @@ class AuthorizationResponse:
     Unauthorized = 401
 
 
-def get_account_id():
-    return get_account_id_from_token(get_token())
+def get_account_id(token):
+    return get_account_id_from_token(token)
 
 
 def get_account_id_from_token(token):

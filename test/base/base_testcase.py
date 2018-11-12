@@ -6,16 +6,16 @@ from app.main import create_app
 
 class BaseTestCase(TestCase):
     @staticmethod
-    def _get_sample_brand():
+    def get_sample_brand():
         return dict(name='Aalborg University')
 
     @staticmethod
-    def _get_sample_account():
+    def get_sample_account():
         # Returned in a function in order to make it immutable
         return dict(email='test@example.com', first_name='Test', last_name='Account', password='example')
 
     @staticmethod
-    def _get_sample_credentials():
+    def get_sample_credentials():
         return dict(email='test@example.com', password='example')
 
     def create_app(self):

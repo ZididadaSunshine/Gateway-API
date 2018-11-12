@@ -26,7 +26,7 @@ class AuthorizationControllerTests(BaseTestCase):
                                        message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 
         response = self.client.post('/authorization/login', content_type='application/json',
-                                    data=json.dumps(self._get_sample_credentials()))
+                                    data=json.dumps(self.get_sample_credentials()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.InvalidCredentials)
         self.assertFalse(response.json['success'])
@@ -39,7 +39,7 @@ class AuthorizationControllerTests(BaseTestCase):
                                        token=token), AuthorizationResponse.Success
 
         response = self.client.post('/authorization/login', content_type='application/json',
-                                    data=json.dumps(self._get_sample_credentials()))
+                                    data=json.dumps(self.get_sample_credentials()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.Success)
         self.assertEqual(response.json['token'], token)
