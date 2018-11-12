@@ -66,7 +66,7 @@ def login(credentials):
 
 def logout(token=None):
     if token:
-        invalid_token = InvalidToken(token=token, creation_date=datetime.datetime.utcnow())
+        invalid_token = InvalidToken(token=token, created_at=datetime.datetime.utcnow())
 
         db.session.add(invalid_token)
         db.session.commit()

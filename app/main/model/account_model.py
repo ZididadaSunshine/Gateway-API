@@ -7,7 +7,7 @@ class Account(db.Model):
     """ SQLAlchemy model for accounts. """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    creation_date = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)

@@ -50,7 +50,7 @@ def create_brand(account_id, brand_data, create_synonym=True):
     existing = get_brand_by_name(account_id, brand_data['name'])
 
     if not existing:
-        brand = Brand(name=brand_data['name'], creation_date=datetime.datetime.utcnow(), account_id=account_id)
+        brand = Brand(name=brand_data['name'], created_at=datetime.datetime.utcnow(), account_id=account_id)
 
         db.session.add(brand)
 

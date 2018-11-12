@@ -14,7 +14,7 @@ def create_account(user_data):
 
     if not existing:
         account = Account(email=user_data['email'], first_name=user_data['first_name'], last_name=user_data['last_name'],
-                          creation_date=datetime.datetime.utcnow())
+                          created_at=datetime.datetime.utcnow())
         account.set_password(user_data['password'])
 
         db.session.add(account)

@@ -21,7 +21,8 @@ def get_active_synonyms():
 
 def get_brand_synonyms(brand_id):
     """ Get the synonyms associated with a brand. """
-    return Synonym.query.join(BrandSynonym, (Synonym.id == BrandSynonym.synonym_id) & (BrandSynonym.brand_id == brand_id)).all()
+    return Synonym.query.\
+        join(BrandSynonym, (Synonym.id == BrandSynonym.synonym_id) & (BrandSynonym.brand_id == brand_id)).all()
 
 
 def add_synonym(brand_id, synonym_data):
@@ -42,7 +43,8 @@ def add_synonym(brand_id, synonym_data):
         existing = synonym
 
     # Check if the synonym is already associated with the brand
-    if BrandSynonym.query.filter((BrandSynonym.brand_id == brand_id) & (BrandSynonym.synonym_id == existing.id)).scalar():
+    if BrandSynonym.query.filter((BrandSynonym.brand_id == brand_id) & (BrandSynonym.synonym_id == existing.id)).\
+            scalar():
         return dict(success=False,
                     message="The synonym is already associated with the brand."), SynonymServiceResponse.AlreadyExists
 

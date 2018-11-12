@@ -13,7 +13,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         account = Account(email=sample['email'],
                           first_name=sample['first_name'],
                           last_name=sample['last_name'],
-                          creation_date=datetime.datetime.utcnow())
+                          created_at=datetime.datetime.utcnow())
         account.set_password(sample['password'])
 
         return account
@@ -82,7 +82,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         self.assertEqual(get_account_id_from_token(token), account.id)
 
     def test_authorized(self):
-        """ Test whether a session with a valid token is authorized """
+        """ Test that a session with a valid token is authorized """
         self._add_account(self._get_account())
 
         token = login(self.get_sample_credentials())[0]['token']

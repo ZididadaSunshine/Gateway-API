@@ -28,20 +28,20 @@ class BrandServiceTests(DatabaseTestCase):
             self.assertEqual(brand.account_id, account_id)
 
     def test_create_brand_has_synonym(self):
-        """ Test whether a newly created brand has a default synonym """
+        """ Test that a newly created brand has a default synonym """
         account = self._create_dummy_account('dummy@example.com')
         create_brand(account.id, self.get_sample_brand())
 
         self.assertTrue(Synonym.query.filter_by(synonym=self.get_sample_brand()['name'].lower()).scalar())
 
     def test_create_brand_single(self):
-        """ Test whether a single brand can be created with no duplicates """
+        """ Test that a single brand can be created with no duplicates """
         account = self._create_dummy_account('dummy@example.com')
 
         self._test_create_brand(account.id, self.get_sample_brand())
 
     def test_create_brand_multiple_different_name(self):
-        """ Test whether an account can have multiple brands with different names """
+        """ Test that an account can have multiple brands with different names """
         account = self._create_dummy_account('dummy@example.com')
 
         self._test_create_brand(account.id, self.get_sample_brand())
@@ -52,7 +52,7 @@ class BrandServiceTests(DatabaseTestCase):
         self._test_create_brand(account.id, aux_details)
 
     def test_create_brand_multiple_same_account(self):
-        """ Test whether the same brand name cannot be created multiple times with the same account """
+        """ Test that the same brand name cannot be created multiple times with the same account """
         account = self._create_dummy_account('dummy@example.com')
         create_brand(account.id, self.get_sample_brand())
 
@@ -61,7 +61,7 @@ class BrandServiceTests(DatabaseTestCase):
                                 expected_message='Your account already has a brand with that name.')
 
     def test_create_brand_multiple_different_accounts(self):
-        """ Test whether the same brand name can be created multiple times by different accounts """
+        """ Test that the same brand name can be created multiple times by different accounts """
         first_account = self._create_dummy_account('first@example.com')
         second_account = self._create_dummy_account('second@example.com')
 
@@ -70,7 +70,7 @@ class BrandServiceTests(DatabaseTestCase):
         self._test_create_brand(second_account.id, self.get_sample_brand())
 
     def test_update_brand_no_duplicates(self):
-        """ Test whether updating the name of a brand results in a new name """
+        """ Test that updating the name of a brand results in a new name """
         account = self._create_dummy_account('dummy@example.com')
         brand = self._create_dummy_brand(account.id, 'Initial')
 
@@ -87,7 +87,7 @@ class BrandServiceTests(DatabaseTestCase):
         self.assertEqual(brand.name, new_name)
 
     def test_update_brand_duplicates(self):
-        """ Test whether a brand name cannot be updated to an account's existing brand name """
+        """ Test that a brand name cannot be updated to an account's existing brand name """
         first_name, second_name = 'First', 'Second'
 
         account = self._create_dummy_account('dummy@example.com')
