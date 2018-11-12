@@ -42,7 +42,7 @@ class BrandControllerTests(BaseTestCase):
         response = self.client.post('/brands', content_type='application/json')
 
         self.assert400(response)
-p
+
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_get_brands_unauthorized(self, mock_authorized):
         """ Test an unauthorized brand creation attempt """
