@@ -1,7 +1,7 @@
 import datetime
 
 import jwt
-from flask import request
+from flask import current_app
 
 from app.main import db
 from app.main.config import secret
@@ -15,12 +15,8 @@ class AuthorizationResponse:
     Unauthorized = 401
 
 
-def get_account_id():
-    return get_account_id_from_token(get_token())
-
-
-def get_token():
-    return request.headers.get('Authorization')
+def get_account_id(token):
+    return get_account_id_from_token(token)
 
 
 def get_account_id_from_token(token):
@@ -35,9 +31,7 @@ def get_account_id_from_token(token):
         return None
 
 
-def is_authorized():
-    token = get_token()
-
+def is_authorized(token=None):
     if token:
         # Check that token is valid
         invalid_token = InvalidToken.query.filter_by(token=token).first()
@@ -48,6 +42,10 @@ def is_authorized():
                 return True
 
     return False
+
+
+def is_key_correct(key=None):
+    return key == current_app.config['API_KEY']
 
 
 def encode_token(account):
@@ -66,11 +64,9 @@ def login(credentials):
         return dict(success=False, message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 
 
-def logout():
-    token = get_token()
-
+def logout(token=None):
     if token:
-        invalid_token = InvalidToken(token=token, creation_date=datetime.datetime.utcnow())
+        invalid_token = InvalidToken(token=token, created_at=datetime.datetime.utcnow())
 
         db.session.add(invalid_token)
         db.session.commit()

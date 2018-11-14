@@ -1,13 +1,29 @@
+from flask import current_app
 from flask_restplus import Resource
 
 from app.main.dto.synonym_dto import SynonymDTO
-from app.main.service.synonym_service import get_active_synonyms
+import app.main.service.synonym_service as synonym_service
+import app.main.service.authorization_service as authorization_service
 
 api = SynonymDTO.api
 
 
+def key_required(api):
+    def wrapper(func):
+        def check_auth(*args, **kwargs):
+            if not authorization_service.is_key_correct(current_app.config['API_KEY']):
+                api.abort(authorization_service.AuthorizationResponse.Unauthorized)
+
+            return func(*args, **kwargs)
+
+        return check_auth
+
+    return wrapper
+
+
 @api.route('')
 class SynonymsResource(Resource):
-    @api.doc('Retrieve a list of all the currently tracked synonyms.')
+    @api.doc('Retrieve a list of all the currently tracked synonyms.', security='key')
+    @key_required(api)
     def get(self):
-        return [{synonym: count} for synonym, count in get_active_synonyms()]
+        return dict(synonym_service.get_active_synonyms())
