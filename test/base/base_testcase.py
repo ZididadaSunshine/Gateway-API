@@ -16,7 +16,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def get_sample_account():
         # Returned in a function in order to make it immutable
-        return dict(email='test@example.com', first_name='Test', last_name='Account', password='example')
+        return dict(email='test@example.com', username='Test', password='example')
 
     @staticmethod
     def get_sample_credentials():

@@ -9,8 +9,7 @@ class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at = db.Column(db.DateTime, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     brands = db.relationship('Brand', backref='brand', lazy=True)
 

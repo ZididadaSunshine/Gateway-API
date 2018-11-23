@@ -11,8 +11,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
     def _get_account(self):
         sample = self.get_sample_account()
         account = Account(email=sample['email'],
-                          first_name=sample['first_name'],
-                          last_name=sample['last_name'],
+                          username=sample['username'],
                           created_at=datetime.datetime.utcnow())
         account.set_password(sample['password'])
 

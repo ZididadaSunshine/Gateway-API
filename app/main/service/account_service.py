@@ -13,7 +13,7 @@ def create_account(user_data):
     existing = Account.query.filter(Account.email.ilike(user_data['email'])).first()
 
     if not existing:
-        account = Account(email=user_data['email'], first_name=user_data['first_name'], last_name=user_data['last_name'],
+        account = Account(email=user_data['email'], username=user_data['username'],
                           created_at=datetime.datetime.utcnow())
         account.set_password(user_data['password'])
 

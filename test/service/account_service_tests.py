@@ -18,8 +18,7 @@ class AccountServiceTests(DatabaseTestCase):
 
             self.assertIsNotNone(account)
             self.assertEqual(account.email, details['email'])
-            self.assertEqual(account.first_name, details['first_name'])
-            self.assertEqual(account.last_name, details['last_name'])
+            self.assertEqual(account.username, details['username'])
             self.assertTrue(account.check_password(details['password']))
 
     def test_create_single(self):

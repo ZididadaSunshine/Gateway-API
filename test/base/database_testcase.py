@@ -51,8 +51,7 @@ class DatabaseTestCase(BaseTestCase):
 
     @staticmethod
     def _create_dummy_account(email):
-        account = Account(email=email, first_name='Dummy', last_name='Dummy',
-                          created_at=datetime.datetime.utcnow())
+        account = Account(email=email, username='Test', created_at=datetime.datetime.utcnow())
         account.set_password('dummy')
 
         db.session.add(account)
