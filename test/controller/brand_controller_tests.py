@@ -34,7 +34,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_create_brand_unauthorized(self, _mock_authorized):
         """ Test an unauthorized brand creation attempt """
-        response = self.client.post('/brands', content_type='application/json',
+        response = self.client.post('/api/brands', content_type='application/json',
                                     data=json.dumps(self.get_sample_brand()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
@@ -43,7 +43,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.create_brand', return_value=(dict(success=True), BrandServiceResponse.Created))
     def test_create_brand_authorized(self, _mock_authorized, _mock_create):
         """ Test an authorized brand creation attempt with proper data """
-        response = self.client.post('/brands', content_type='application/json',
+        response = self.client.post('/api/brands', content_type='application/json',
                                     data=json.dumps(self.get_sample_brand()))
 
         self.assertEqual(response.status_code, BrandServiceResponse.Created)
@@ -52,14 +52,14 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=True)
     def test_create_brand_authorized_empty(self, _mock_authorized):
         """ Test an authorized brand creation attempt with no data """
-        response = self.client.post('/brands', content_type='application/json')
+        response = self.client.post('/api/brands', content_type='application/json')
 
         self.assert400(response)
 
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_get_brands_unauthorized(self, _mock_authorized):
         """ Test an unauthorized brand creation attempt """
-        response = self.client.get('/brands')
+        response = self.client.get('/api/brands')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
 
@@ -67,7 +67,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brands_by_account', return_value=get_brand_instances())
     def test_get_brands_authorized(self, _mock_authorized, _mock_get_brands):
         """ Test an authorized brand retrieval attempt """
-        response = self.client.get('/brands')
+        response = self.client.get('/api/brands')
 
         self.assertEqual(response.status_code, BrandServiceResponse.Success)
 
@@ -83,7 +83,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_delete_brand_unauthorized(self, _mock_authorized):
         """ Test an unauthorized brand deletion attempt """
-        response = self.client.delete('/brands/1')
+        response = self.client.delete('/api/brands/1')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
 
@@ -91,7 +91,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=None)
     def test_delete_brand_authorized_unexisting(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized brand deletion attempt on an unexisting brand """
-        response = self.client.delete('/brands/1')
+        response = self.client.delete('/api/brands/1')
 
         self.assertEqual(response.status_code, BrandServiceResponse.DoesNotExist)
 
@@ -101,14 +101,14 @@ class BrandControllerTests(BaseTestCase):
                 return_value=(dict(success=True), BrandServiceResponse.Success))
     def test_delete_brand_authorized_existing(self, _mock_authorized, _mock_get_brand, _mock_delete):
         """ Test an authorized brand deletion attempt on an existing brand """
-        response = self.client.delete('/brands/1')
+        response = self.client.delete('/api/brands/1')
 
         self.assertEqual(response.status_code, BrandServiceResponse.Success)
 
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_get_brand_unauthorized(self, _mock_authorized):
         """ Test an unauthorized brand retrieval  """
-        response = self.client.get('/brands/1')
+        response = self.client.get('/api/brands/1')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
 
@@ -116,7 +116,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=None)
     def test_get_brand_authorized_unexisting(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized brand retrieval of an unexisting brand  """
-        response = self.client.get('/brands/1')
+        response = self.client.get('/api/brands/1')
 
         self.assertEqual(response.status_code, BrandServiceResponse.DoesNotExist)
 
@@ -124,7 +124,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=get_brand_instance(1))
     def test_get_brand_authorized_existing(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized brand retrieval of an existing brand """
-        response = self.client.get('/brands/1')
+        response = self.client.get('/api/brands/1')
 
         instance = get_brand_instance(1)
         self.assertEqual(response.json['id'], instance.id)
@@ -134,7 +134,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_update_brand_unauthorized(self, _mock_authorized):
         """ Test an unauthorized brand update  """
-        response = self.client.put('/brands/1', content_type='application/json',
+        response = self.client.put('/api/brands/1', content_type='application/json',
                                    data=json.dumps(get_new_name_sample()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
@@ -142,7 +142,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=True)
     def test_update_brand_authorized_partial(self, _mock_authorized):
         """ Test an authorized partial brand update  """
-        response = self.client.put('/brands/1', content_type='application/json')
+        response = self.client.put('/api/brands/1', content_type='application/json')
 
         self.assert400(response)
 
@@ -150,7 +150,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=None)
     def test_update_brand_authorized_unexisting(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized brand update on an unexisting brand """
-        response = self.client.put('/brands/1', content_type='application/json',
+        response = self.client.put('/api/brands/1', content_type='application/json',
                                    data=json.dumps(get_new_name_sample()))
 
         self.assertEqual(response.status_code, BrandServiceResponse.DoesNotExist)
@@ -161,7 +161,7 @@ class BrandControllerTests(BaseTestCase):
                 return_value=(dict(success=True), BrandServiceResponse.Success))
     def test_update_brand_authorized_existing(self, _mock_authorized, _mock_get_brand, _mock_update):
         """ Test an authorized brand update on an existing brand  """
-        response = self.client.put('/brands/1', content_type='application/json',
+        response = self.client.put('/api/brands/1', content_type='application/json',
                                    data=json.dumps(get_new_name_sample()))
 
         self.assertEqual(response.status_code, BrandServiceResponse.Success)
@@ -170,7 +170,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_get_synonyms_unauthorized(self, _mock_authorized):
         """ Test an unauthorized synonym retrieval for a brand """
-        response = self.client.get('/brands/1/synonyms')
+        response = self.client.get('/api/brands/1/synonyms')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
 
@@ -178,7 +178,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=None)
     def test_get_synonyms_authorized_unexisting(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized synonym retrieval for an unexisting brand """
-        response = self.client.get('/brands/1/synonyms')
+        response = self.client.get('/api/brands/1/synonyms')
 
         self.assertEqual(response.status_code, BrandServiceResponse.DoesNotExist)
 
@@ -187,7 +187,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.synonym_service.get_brand_synonyms', return_value=get_synonym_instances())
     def test_get_synonyms_authorized_existing(self, _mock_authorized, _mock_get_brand, _mock_get_brand_synoynms):
         """ Test an authorized synonym retrieval for an existing brand """
-        response = self.client.get('/brands/1/synonyms')
+        response = self.client.get('/api/brands/1/synonyms')
 
         self.assertEqual(response.status_code, BrandServiceResponse.Success)
 
@@ -197,7 +197,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_create_synonym_unauthorized(self, _mock_authorized):
         """ Test an unauthorized attempt at creating a brand synonym """
-        response = self.client.post('/brands/1/synonyms', content_type='application/json',
+        response = self.client.post('/api/brands/1/synonyms', content_type='application/json',
                                     data=json.dumps(self.get_sample_synonym()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
@@ -205,7 +205,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_create_synonym_authorized_empty(self, _mock_authorized):
         """ Test an authorized attempt at creating a brand synonym without data """
-        response = self.client.post('/brands/1/synonyms', content_type='application/json')
+        response = self.client.post('/api/brands/1/synonyms', content_type='application/json')
 
         self.assert400(response)
 
@@ -213,7 +213,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=None)
     def test_create_synonym_authorized_unexisting(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized attempt at creating a brand synonym for an unexisting brand """
-        response = self.client.post('/brands/1/synonyms', content_type='application/json',
+        response = self.client.post('/api/brands/1/synonyms', content_type='application/json',
                                     data=json.dumps(self.get_sample_synonym()))
 
         self.assertEqual(response.status_code, BrandServiceResponse.DoesNotExist)
@@ -224,7 +224,7 @@ class BrandControllerTests(BaseTestCase):
                 return_value=(dict(success=True), SynonymServiceResponse.Created))
     def test_create_synonym_authorized_existing(self, _mock_authorized, _mock_get_brand, _mock_create_synonym):
         """ Test an authorized attempt at creating a brand synonym for an unexisting brand """
-        response = self.client.post('/brands/1/synonyms', content_type='application/json',
+        response = self.client.post('/api/brands/1/synonyms', content_type='application/json',
                                     data=json.dumps(self.get_sample_synonym()))
 
         self.assertEqual(response.status_code, SynonymServiceResponse.Created)
@@ -233,7 +233,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_delete_synonym_unauthorized(self, _mock_authorized):
         """ Test an authorized attempt at deleting a brand synonym for an unexisting brand """
-        response = self.client.delete('/brands/1/synonyms/aau')
+        response = self.client.delete('/api/brands/1/synonyms/aau')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
 
@@ -241,7 +241,7 @@ class BrandControllerTests(BaseTestCase):
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=None)
     def test_delete_synonym_authorized_unexisting_brand(self, _mock_authorized, _mock_get_brand):
         """ Test an authorized attempt at deleting a brand synonym for an unexisting brand """
-        response = self.client.delete('/brands/1/synonyms/aau')
+        response = self.client.delete('/api/brands/1/synonyms/aau')
 
         self.assertEqual(response.status_code, BrandServiceResponse.DoesNotExist)
 
@@ -252,7 +252,7 @@ class BrandControllerTests(BaseTestCase):
     def test_delete_synonym_authorized_existing_brand(self, _mock_authorized, _mock_get_brand,
                                                       _mock_delete_synonym):
         """ Test an authorized attempt at deleting a brand synonym for an existing brand """
-        response = self.client.delete('/brands/1/synonyms/aau')
+        response = self.client.delete('/api/brands/1/synonyms/aau')
 
         self.assertEqual(response.status_code, SynonymServiceResponse.Success)
         self.assertTrue(response.json['success'])

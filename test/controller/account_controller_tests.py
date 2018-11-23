@@ -9,7 +9,7 @@ from test.base.base_testcase import BaseTestCase
 class AccountControllerTests(BaseTestCase):
     def test_create_account_empty(self):
         """ Test an empty account creation """
-        response = self.client.post('/accounts', content_type='application/json')
+        response = self.client.post('/api/accounts', content_type='application/json')
 
         self.assert400(response)
 
@@ -18,7 +18,7 @@ class AccountControllerTests(BaseTestCase):
         sample = self.get_sample_account()
         del sample['password']
 
-        response = self.client.post('/accounts', data=json.dumps(sample), content_type='application/json')
+        response = self.client.post('/api/accounts', data=json.dumps(sample), content_type='application/json')
 
         self.assert400(response)
 
@@ -28,7 +28,7 @@ class AccountControllerTests(BaseTestCase):
         # Mock a successful creation
         mock_create.return_value = dict(success=True), AccountServiceResponse.Created
 
-        response = self.client.post('/accounts', data=json.dumps(self.get_sample_account()),
+        response = self.client.post('/api/accounts', data=json.dumps(self.get_sample_account()),
                                     content_type='application/json')
 
         self.assertTrue(response.json['success'])
@@ -40,7 +40,7 @@ class AccountControllerTests(BaseTestCase):
         # Mock a failed creation
         mock_create.return_value = dict(success=False), AccountServiceResponse.AlreadyExists
 
-        response = self.client.post('/accounts', data=json.dumps(self.get_sample_account()),
+        response = self.client.post('/api/accounts', data=json.dumps(self.get_sample_account()),
                                     content_type='application/json')
 
         self.assertFalse(response.json['success'])

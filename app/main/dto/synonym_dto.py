@@ -7,4 +7,3 @@ class SynonymDTO:
     synonym = api.model('Synonym details', {
         'synonym': fields.String(required=True, description='A synonym string.')
     })
-

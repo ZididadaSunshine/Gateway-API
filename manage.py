@@ -1,6 +1,6 @@
 import unittest
 
-from flask import current_app
+from flask_cors import CORS
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
@@ -8,6 +8,7 @@ from app import blueprint
 from app.main import create_app, db
 
 app = create_app('dev')
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(blueprint)
 app.app_context().push()
 

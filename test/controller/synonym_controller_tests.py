@@ -9,7 +9,7 @@ class SynonymControllerTests(BaseTestCase):
     @mock.patch('app.main.service.authorization_service.is_key_correct', return_value=False)
     def test_get_synonyms_unauthorized(self, _mock_authorize):
         """ Test retrieval of synonyms without authorization """
-        response = self.client.get('/synonyms')
+        response = self.client.get('/api/synonyms')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Unauthorized)
 
@@ -18,7 +18,7 @@ class SynonymControllerTests(BaseTestCase):
                 return_value=[('aau', 1)])
     def test_get_synonyms_authorized(self, _mock_authorize, _mock_get_synonyms):
         """ Test retrieval of synonyms with authorization """
-        response = self.client.get('/synonyms')
+        response = self.client.get('/api/synonyms')
 
         self.assertEqual(response.status_code, SynonymServiceResponse.Success)
         self.assertIn('aau', response.json)

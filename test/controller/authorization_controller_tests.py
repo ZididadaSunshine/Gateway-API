@@ -8,13 +8,13 @@ from test.base.base_testcase import BaseTestCase
 class AuthorizationControllerTests(BaseTestCase):
     def test_login_empty(self):
         """ Test an empty login request """
-        response = self.client.post('/authorization/login', content_type='application/json')
+        response = self.client.post('/api/authorization/login', content_type='application/json')
 
         self.assert400(response)
 
     def test_login_partial(self):
         """ Test a partial login request """
-        response = self.client.post('/authorization/login', content_type='application/json',
+        response = self.client.post('/api/authorization/login', content_type='application/json',
                                     data=json.dumps(dict(email='test@example.com')))
 
         self.assert400(response)
@@ -25,7 +25,7 @@ class AuthorizationControllerTests(BaseTestCase):
         mock_login.return_value = dict(success=False,
                                        message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 
-        response = self.client.post('/authorization/login', content_type='application/json',
+        response = self.client.post('/api/authorization/login', content_type='application/json',
                                     data=json.dumps(self.get_sample_credentials()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.InvalidCredentials)
@@ -38,7 +38,7 @@ class AuthorizationControllerTests(BaseTestCase):
         mock_login.return_value = dict(success=True,
                                        token=token), AuthorizationResponse.Success
 
-        response = self.client.post('/authorization/login', content_type='application/json',
+        response = self.client.post('/api/authorization/login', content_type='application/json',
                                     data=json.dumps(self.get_sample_credentials()))
 
         self.assertEqual(response.status_code, AuthorizationResponse.Success)
@@ -50,7 +50,7 @@ class AuthorizationControllerTests(BaseTestCase):
         """ Test a logout request with a token """
         mock_logout.return_value = dict(success=True), AuthorizationResponse.Success
 
-        response = self.client.get('/authorization/logout', headers={'Authorization': 'Test'})
+        response = self.client.get('/api/authorization/logout', headers={'Authorization': 'Test'})
 
         self.assertEqual(response.status_code, AuthorizationResponse.Success)
         self.assertTrue(response.json['success'])
@@ -60,7 +60,7 @@ class AuthorizationControllerTests(BaseTestCase):
         """ Test a logout request without a token """
         mock_logout.return_value = dict(success=True), AuthorizationResponse.Success
 
-        response = self.client.get('/authorization/logout')
+        response = self.client.get('/api/authorization/logout')
 
         self.assertEqual(response.status_code, AuthorizationResponse.Success)
         self.assertTrue(response.json['success'])

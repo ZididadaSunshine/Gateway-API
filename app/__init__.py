@@ -6,7 +6,7 @@ from app.main.controller.account_controller import api as account_namespace
 from app.main.controller.brand_controller import api as brand_namespace
 from app.main.controller.synonym_controller import api as synonym_namespace
 
-blueprint = Blueprint('sw7-gateway-api', __name__)
+blueprint = Blueprint('sw7-gateway-api', __name__, url_prefix='/api')
 
 api = Api(blueprint, title='SW7 Gateway API', version='1.0', authorizations={'jwt': {'type': 'apiKey',
                                                                                      'in': 'header',
