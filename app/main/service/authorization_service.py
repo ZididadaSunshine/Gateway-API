@@ -48,18 +48,24 @@ def is_key_correct(key=None):
     return key == current_app.config['API_KEY']
 
 
-def encode_token(account):
-    payload = {'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1), 'iat': datetime.datetime.utcnow(),
-               'sub': account.id}
+def _to_timestamp(date):
+    epoch = datetime.datetime(1970, 1, 1)
+    return int((date - epoch).total_seconds() * 1000)
+
+
+def get_token(account):
+    expires = _to_timestamp(datetime.datetime.utcnow() + datetime.timedelta(days=1))
+    payload = {'exp': expires, 'iat': datetime.datetime.utcnow(), 'sub': account.id}
 
     # The decode call at the end simply decodes the JWT to a string, it does not actually decode the token
-    return jwt.encode(payload, secret, algorithm='HS256').decode()
+    return expires, jwt.encode(payload, secret, algorithm='HS256').decode()
 
 
 def login(credentials):
     account = Account.query.filter(Account.email.ilike(credentials['email'])).first()
     if account and account.check_password(credentials['password']):
-        return dict(success=True, token=encode_token(account)), AuthorizationResponse.Success
+        expires, token = get_token(account)
+        return dict(success=True, token=token, expires=expires), AuthorizationResponse.Success
     else:
         return dict(success=False, message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 

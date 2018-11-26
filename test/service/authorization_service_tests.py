@@ -2,7 +2,7 @@ import datetime
 
 from app.main import db
 from app.main.model.account_model import Account
-from app.main.service.authorization_service import login, AuthorizationResponse, encode_token, \
+from app.main.service.authorization_service import login, AuthorizationResponse, get_token, \
     get_account_id_from_token, is_authorized, logout, is_key_correct
 from test.base.database_testcase import DatabaseTestCase
 
@@ -76,7 +76,7 @@ class AuthorizationServiceTests(DatabaseTestCase):
         account = self._get_account()
         account.id = 1
 
-        token = encode_token(account)
+        _, token = get_token(account)
 
         self.assertEqual(get_account_id_from_token(token), account.id)
 
