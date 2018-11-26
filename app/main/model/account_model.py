@@ -15,7 +15,7 @@ class Account(db.Model):
 
     """ Hashes and sets a password for the account. """
     def set_password(self, password):
-        self.password = flask_bcrypt.generate_password_hash(password)
+        self.password = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     """ Check if a password matches the hashed password stored for the account. """
     def check_password(self, password):

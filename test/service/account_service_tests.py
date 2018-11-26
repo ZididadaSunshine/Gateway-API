@@ -21,7 +21,7 @@ class AccountServiceTests(DatabaseTestCase):
             self.assertEqual(account.username, details['username'])
             self.assertTrue(account.check_password(details['password']))
 
-    def test_create_single(self):
+    def test_create_single(self
         """ Test that an account can be created """
         self._test_create(self.get_sample_account())
 
