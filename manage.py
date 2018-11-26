@@ -7,7 +7,7 @@ from flask_script import Manager
 from app import blueprint
 from app.main import create_app, db
 
-app = create_app('dev')
+app = create_app('prod')
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(blueprint)
 app.app_context().push()
