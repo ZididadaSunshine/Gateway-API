@@ -8,7 +8,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SWAGGER_UI_OPERATION_ID = True
     SWAGGER_UI_REQUEST_DURATION = True
-    API_KEY = 'secret'
+    API_KEY = os.getenv('API_KEY', 'secret')
 
 
 class DevelopmentConfig(Config):

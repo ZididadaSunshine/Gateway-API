@@ -13,7 +13,7 @@ api = Api(blueprint, title='SW7 Gateway API', version='1.0', authorizations={'jw
                                                                                      'name': 'Authorization'},
                                                                              'key': {'type': 'apiKey',
                                                                                      'in': 'header',
-                                                                                     'name': 'Key'}})
+                                                                                     'name': 'API-Key'}})
 
 # Add namespaces to API
 api.add_namespace(authorization_namespace, path='/authorization')
