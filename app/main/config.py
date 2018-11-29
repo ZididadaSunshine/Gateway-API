@@ -27,6 +27,8 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     ENV = 'production'
     DEBUG = False
+    SQLALCHEMY_POOL_SIZE = 100
+    SQLALCHEMY_POOL_RECYCLE = 200
     SQLALCHEMY_DATABASE_URI = f'mysql+mysqldb://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}/{os.environ["DB_DATABASE"]}'
 
 
