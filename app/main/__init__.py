@@ -25,8 +25,4 @@ def create_app(config):
 
     bcrypt.init_app(app)
 
-    @app.teardown_appcontext
-    def shutdown_session(exception=None):
-        db.session.remove()
-
     return app
