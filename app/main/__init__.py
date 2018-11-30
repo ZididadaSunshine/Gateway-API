@@ -19,7 +19,10 @@ def create_app(config):
     # Create Flask application and initialize Bcrypt and SQLAlchemy with the application instance
     app = Flask(__name__)
     app.config.from_object(configurations[config])
+
+    db.app = app
     db.init_app(app)
+
     bcrypt.init_app(app)
 
     @app.teardown_appcontext
