@@ -22,7 +22,7 @@ class TestConfigTests(BaseTestCase):
 
     def test_database_uri(self):
         """ Test the database variable of the test environment """
-        self.assertIn('test.db', self.app.config['SQLALCHEMY_DATABASE_URI'])
+        self.assertTrue('postgresql', self.app.config['SQLALCHEMY_DATABASE_URI'])
 
 
 class ProductionConfigTests(BaseTestCase):
