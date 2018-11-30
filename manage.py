@@ -11,7 +11,7 @@ from app.main import create_app, db
 app = create_app(os.getenv('API_CONFIG', 'dev'))
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(blueprint)
-app.app_context().push()
+# app.app_context().push()
 
 manager = Manager(app)
 

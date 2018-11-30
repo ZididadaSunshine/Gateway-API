@@ -25,13 +25,4 @@ def create_app(config):
 
     bcrypt.init_app(app)
 
-    @app.teardown_request
-    def shutdown_session(response_or_exc):
-        if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
-            if response_or_exc is None:
-                db.session.commit()
-
-        db.session.remove()
-        return response_or_exc
-
     return app
