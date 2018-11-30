@@ -28,6 +28,7 @@ class ProductionConfig(Config):
     ENV = 'production'
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = f'postgresql://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}/{os.environ["DB_DATABASE"]}'
+    SQLALCHEMY_POOL_RECYCLE = 60
 
 
 configurations = dict(dev=DevelopmentConfig,
