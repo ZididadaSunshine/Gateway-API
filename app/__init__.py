@@ -6,12 +6,12 @@ from app.main.controller.account_controller import api as account_namespace
 from app.main.controller.brand_controller import api as brand_namespace
 from app.main.controller.synonym_controller import api as synonym_namespace
 
-blueprint = Blueprint('sw7-gateway-api', __name__, url_prefix='/api')
+blueprint = Blueprint('sc-gateway', __name__, url_prefix='/api')
 
-api = Api(blueprint, title='SW7 Gateway API', version='1.0', authorizations={'jwt': {'type': 'apiKey',
+api = Api(blueprint, title='SentiCloud Gateway', version='1.0', authorizations={'jwt': {'type': 'apiKey',
                                                                                      'in': 'header',
                                                                                      'name': 'Authorization'},
-                                                                             'key': {'type': 'apiKey',
+                                                                                'key': {'type': 'apiKey',
                                                                                      'in': 'header',
                                                                                      'name': 'API-Key'}})
 
