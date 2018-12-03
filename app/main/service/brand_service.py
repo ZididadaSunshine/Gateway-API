@@ -8,7 +8,7 @@ from app.main.service.synonym_service import add_synonym
 class BrandServiceResponse:
     Success = 200
     Created = 201
-    AlreadyExists = 400
+    AlreadyExists = 409
     DoesNotExist = 404
 
 

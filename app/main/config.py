@@ -14,20 +14,20 @@ class Config:
 class DevelopmentConfig(Config):
     ENV = 'development'
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(basedir, "development.db")}'
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{os.getenv("DB_GATEWAY_USERNAME", None)}:{os.getenv("DB_GATEWAY_PASSWORD", None)}@{os.getenv("DB_GATEWAY_HOST", None)}/{os.getenv("DB_GATEWAY_DATABASE", None)}_dev'
 
 
 class TestingConfig(Config):
     ENV = 'test'
     TESTING = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}/{os.environ["DB_DATABASE"]}_test'
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{os.getenv("DB_GATEWAY_USERNAME", None)}:{os.getenv("DB_GATEWAY_PASSWORD", None)}@{os.getenv("DB_GATEWAY_HOST", None)}/{os.getenv("DB_GATEWAY_DATABASE", None)}_test'
 
 
 class ProductionConfig(Config):
     ENV = 'production'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}/{os.environ["DB_DATABASE"]}'
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{os.getenv("DB_USERNAME", None)}:{os.getenv("DB_PASSWORD", None)}@{os.getenv("DB_HOST", None)}/{os.getenv("DB_DATABASE", None)}'
 
 
 configurations = dict(dev=DevelopmentConfig,

@@ -15,4 +15,3 @@ class AccountsResource(Resource):
     @api.expect(AccountDTO.account, validate=True)
     def post(self):
         return service.create_account(request.json)
-

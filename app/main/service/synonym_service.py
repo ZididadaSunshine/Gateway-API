@@ -1,7 +1,5 @@
 import datetime
 
-from sqlalchemy.orm import synonym
-
 from app.main import db
 from app.main.model.brand_synonym_association import BrandSynonym
 from app.main.model.synonym_model import Synonym
@@ -10,7 +8,7 @@ from app.main.model.synonym_model import Synonym
 class SynonymServiceResponse:
     Success = 200
     Created = 201
-    AlreadyExists = 400
+    AlreadyExists = 409
     DoesNotExist = 404
 
 

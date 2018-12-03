@@ -6,7 +6,7 @@ from app.main.model.account_model import Account
 
 class AccountServiceResponse:
     Created = 201
-    AlreadyExists = 400
+    AlreadyExists = 409
 
 
 def create_account(user_data):
