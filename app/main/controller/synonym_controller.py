@@ -9,7 +9,7 @@ api = SynonymDTO.api
 
 
 def get_key():
-    return request.headers.get('API-Key')
+    return request.headers.get('Authorization')
 
 
 def key_required(api):

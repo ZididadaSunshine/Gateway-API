@@ -64,7 +64,7 @@ class DevelopmentConfigTests(BaseTestCase):
 
     def test_database_uri(self):
         """ Test the database variable of the development environment """
-        self.assertIn('development.db', self.app.config['SQLALCHEMY_DATABASE_URI'])
+        self.assertIn('postgresql', self.app.config['SQLALCHEMY_DATABASE_URI'])
 
 
 if __name__ == "__main__":
