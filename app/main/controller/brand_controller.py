@@ -87,7 +87,7 @@ class BrandSynonymsResource(Resource):
         synonyms = synonym_service.get_brand_synonyms(brand.id)
 
         # Instead of returning the model for each synonym, we just return the synonym itself
-        return [synonym.synonym for synonym in synonyms]
+        return [{'synonym': synonym.synonym} for synonym in synonyms]
 
     @api.response(brand_service.BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
     @api.expect(SynonymDTO.synonym, validate=True)

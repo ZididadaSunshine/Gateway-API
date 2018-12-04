@@ -192,7 +192,9 @@ class BrandControllerTests(BaseTestCase):
         self.assertEqual(response.status_code, BrandServiceResponse.Success)
 
         # Test that all synonyms are present
-        self.assertTrue(set(response.json) == set([synonym.synonym for synonym in get_synonym_instances()]))
+        synonyms = [synonym.synonym for synonym in get_synonym_instances()]
+        for pair in response.json:
+            self.assertIn(pair['synonym'], synonyms)
 
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=False)
     def test_create_synonym_unauthorized(self, _mock_authorized):
