@@ -14,7 +14,7 @@ api = Api(blueprint, title='SentiCloud Gateway', version='1.0', authorizations={
                                                                                      'name': 'Authorization'},
                                                                                 'key': {'type': 'apiKey',
                                                                                      'in': 'header',
-                                                                                     'name': 'API-Key'}})
+                                                                                     'name': 'Authorization'}})
 
 # Add namespaces to API
 api.add_namespace(authorization_namespace, path='/authorization')
