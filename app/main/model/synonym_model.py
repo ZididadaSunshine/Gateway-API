@@ -7,5 +7,5 @@ class Synonym(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # To avoid redundancy, synonyms are unique
-    synonym = db.Column(db.String(255), unique=True, nullable=False)
+    synonym = db.Column(db.String(255), unique=True, nullable=False, index=True)
     brands = db.relationship("Brand", secondary=BrandSynonym.__table__, back_populates="synonyms")

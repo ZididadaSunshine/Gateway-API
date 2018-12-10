@@ -26,6 +26,9 @@ class BrandsResource(Resource):
     @api.doc('Create a new brand to be associated with the authorized account.', security='jwt')
     @auth_required(api)
     def post(self):
+        if not request.json['name'].strip():
+            api.abort(400)
+
         return brand_service.create_brand(get_account_id(get_token()), request.json)
 
 
@@ -64,6 +67,9 @@ class BrandResource(Resource):
     @api.expect(BrandDTO.brand, validate=True)
     @auth_required(api)
     def put(self, brand_id):
+        if not request.json['name'].strip():
+            api.abort(400)
+
         brand = brand_service.get_brand_by_id(get_account_id(get_token()), brand_id)
 
         if not brand:
@@ -94,6 +100,9 @@ class BrandSynonymsResource(Resource):
     @api.doc('Create a new synonym to be associated with the brand.', security='jwt')
     @auth_required(api)
     def post(self, brand_id):
+        if not request.json['synonym'].strip():
+            api.abort(400)
+
         brand = brand_service.get_brand_by_id(get_account_id(get_token()), brand_id)
 
         if not brand:
