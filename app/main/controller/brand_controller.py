@@ -23,7 +23,7 @@ class BrandsResource(Resource):
         for brand in brand_service.get_brands_by_account(get_account_id(get_token())):
             statistics = get_brand_statistics(brand)
             results.append({'id': brand.id, 'name': brand.name, 'sentiment_average': statistics['sentiment_average'],
-                            'sentiment_trend': statistics['trend'], 'posts': statistics['posts']})
+                            'sentiment_trend': statistics['sentiment_trend'], 'posts': statistics['posts']})
 
         return results
 
