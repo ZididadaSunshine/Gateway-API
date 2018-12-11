@@ -8,7 +8,7 @@ from app.main.service.authorization_service import get_account_id
 
 import app.main.service.synonym_service as synonym_service
 import app.main.service.brand_service as brand_service
-from app.main.service.statistics_service import get_brand_sentiment
+from app.main.service.statistics_service import get_brand_statistics
 
 api = BrandDTO.api
 
@@ -21,9 +21,9 @@ class BrandsResource(Resource):
         results = []
 
         for brand in brand_service.get_brands_by_account(get_account_id(get_token())):
-            sentiment = get_brand_sentiment(brand)
-            results.append({'id': brand.id, 'name': brand.name, 'average': sentiment['average'],
-                            'trend': sentiment['trend']})
+            statistics = get_brand_statistics(brand)
+            results.append({'id': brand.id, 'name': brand.name, 'sentiment_average': statistics['sentiment_average'],
+                            'sentiment_trend': statistics['trend'], 'posts': statistics['posts']})
 
         return results
 
@@ -64,8 +64,9 @@ class BrandResource(Resource):
         if not brand:
             api.abort(brand_service.BrandServiceResponse.DoesNotExist)
 
-        sentiment = get_brand_sentiment(brand)
-        return {'id': brand.id, 'name': brand.name, 'average': sentiment['average'], 'trend': sentiment['trend']}
+        statistics = get_brand_statistics(brand)
+        return {'id': brand.id, 'name': brand.name, 'sentiment_average': statistics['sentiment_average'],
+                'sentiment_trend': statistics['sentiment_trend'], 'posts': statistics['posts']}
 
     @api.response(brand_service.BrandServiceResponse.Success, 'Brand details updated successfully.')
     @api.response(brand_service.BrandServiceResponse.AlreadyExists, 'The brand cannot be renamed to an existing brand.')

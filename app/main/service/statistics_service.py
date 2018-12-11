@@ -13,35 +13,39 @@ def get_overview_statistics(granularity, request_json):
                          json=request_json)
 
 
-def get_brand_sentiment(brand):
+def get_brand_statistics(brand):
     # If delta is updated, the delta string in the POST request should also be updated
     delta = datetime.timedelta(days=1)
 
-    average = None
-    trend = None
+    sentiment_average = None
+    sentiment_trend = None
+    posts = None
 
     # Check if an update is necessary
     last_updated = brand.sentiment_updated_at
     now = datetime.datetime.utcnow()
-    if not last_updated or now - last_updated > delta:
+    if not last_updated or now - last_updated > delta / 4:
         synonyms = [synonym.synonym for synonym in synonym_service.get_brand_synonyms(brand.id)]
         if synonyms:
-            response = requests.post(f'http://{os.environ["STATISTICS_API_HOST"]}/api/statistics/day/average',
+            response = requests.post(f'http://{os.environ["STATISTICS_API_HOST"]}/api/statistics/day/sentiment_average',
                                      json=dict(synonyms=synonyms)).json()
 
             # Update brand with new values
-            average = response['average']
-            trend = response['trend']
+            sentiment_average = response['sentiment_average']
+            sentiment_trend = response['sentiment_trend']
+            posts = response['posts']
 
             # Update brand with new values
-            Brand.query.filter_by(id=brand.id).update(dict(sentiment_average=average, sentiment_trend=trend,
-                                                           sentiment_updated_at=now))
+            Brand.query.filter_by(id=brand.id).update(dict(sentiment_average=sentiment_average, posts=posts,
+                                                           sentiment_trend=sentiment_trend, statistics_updated_at=now))
             db.session.commit()
     else:
-        average = brand.sentiment_average
-        trend = brand.sentiment_trend
+        sentiment_average = brand.sentiment_average
+        sentiment_trend = brand.sentiment_trend
+        posts = brand.posts
 
     return {
-        'average': average,
-        'trend': trend
+        'sentiment_average': sentiment_average,
+        'sentiment_trend': sentiment_trend,
+        'posts': posts
     }
