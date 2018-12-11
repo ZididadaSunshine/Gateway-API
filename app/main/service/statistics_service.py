@@ -37,6 +37,9 @@ def get_brand_sentiment(brand):
             Brand.query.filter_by(id=brand.id).update(dict(sentiment_average=average, sentiment_trend=trend,
                                                            sentiment_updated_at=now))
             db.session.commit()
+    else:
+        average = brand.sentiment_average
+        trend = brand.sentiment_trend
 
     return {
         'average': average,
