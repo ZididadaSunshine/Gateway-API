@@ -22,7 +22,7 @@ def get_brand_statistics(brand):
     posts = None
 
     # Check if an update is necessary
-    last_updated = brand.sentiment_updated_at
+    last_updated = brand.statistics_updated_at
     now = datetime.datetime.utcnow()
     if not last_updated or now - last_updated > delta / 4:
         synonyms = [synonym.synonym for synonym in synonym_service.get_brand_synonyms(brand.id)]
