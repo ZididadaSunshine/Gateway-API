@@ -5,7 +5,7 @@ from app.main.controller.authorization_controller import auth_required, get_toke
 from app.main.dto.statistics_dto import StatisticsDTO
 from app.main.service import brand_service, synonym_service
 from app.main.service.authorization_service import get_account_id
-from app.main.service.statistics_service import get_statistics
+from app.main.service.statistics_service import get_overview_statistics
 
 api = StatisticsDTO.api
 
@@ -31,10 +31,9 @@ class StatisticsResource(Resource):
         request_data = {
             'from': request.json['from'],
             'to': request.json['to'],
-            'granularity': request.json['granularity'],
             'synonyms': synonyms
         }
 
-        statistics_response = get_statistics(request_data)
+        statistics_response = get_overview_statistics(request.json['granularity'], request_data)
 
         return statistics_response.json(), statistics_response.status_code

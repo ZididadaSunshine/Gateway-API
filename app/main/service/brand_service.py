@@ -33,7 +33,7 @@ def delete_brand(brand):
     return dict(success=True), BrandServiceResponse.Success
 
 
-def update_brand(account_id, brand, change_data):
+def update_brand_name(account_id, brand, change_data):
     # Check if there is an existing brand with the name
     existing = get_brand_by_name(account_id, change_data['name'])
     if existing and existing.id != brand.id:

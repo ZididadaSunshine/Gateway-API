@@ -1,9 +1,9 @@
-from flask import current_app, request
+from flask import request
 from flask_restplus import Resource
 
-from app.main.dto.synonym_dto import SynonymDTO
-import app.main.service.synonym_service as synonym_service
 import app.main.service.authorization_service as authorization_service
+import app.main.service.synonym_service as synonym_service
+from app.main.dto.synonym_dto import SynonymDTO
 
 api = SynonymDTO.api
 

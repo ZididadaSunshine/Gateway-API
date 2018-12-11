@@ -8,6 +8,7 @@ from app.main.service.authorization_service import get_account_id
 
 import app.main.service.synonym_service as synonym_service
 import app.main.service.brand_service as brand_service
+from app.main.service.statistics_service import get_brand_sentiment
 
 api = BrandDTO.api
 
@@ -15,10 +16,14 @@ api = BrandDTO.api
 @api.route('')
 class BrandsResource(Resource):
     @api.doc('Retrieves a list of all the brands associated with the authorized account.', security='jwt')
-    @api.marshal_list_with(BrandDTO.brand)
     @auth_required(api)
     def get(self):
-        return brand_service.get_brands_by_account(get_account_id(get_token()))
+        results = []
+
+        for brand in brand_service.get_brands_by_account(get_account_id(get_token())):
+            sentiment = get_brand_sentiment(brand)
+            results.append({'id': brand.id, 'name': brand.name, 'average': sentiment['average'],
+                            'trend': sentiment['trend']})
 
     @api.response(brand_service.BrandServiceResponse.Created, 'Brand successfully created.')
     @api.response(brand_service.BrandServiceResponse.AlreadyExists, 'The authorized account already has a brand with that name.')
@@ -50,7 +55,6 @@ class BrandResource(Resource):
 
     @api.doc('Retrieve details about the brand.', security='jwt')
     @api.response(brand_service.BrandServiceResponse.DoesNotExist, 'The requested brand does not exist.')
-    @api.marshal_with(BrandDTO.brand)
     @auth_required(api)
     def get(self, brand_id):
         brand = brand_service.get_brand_by_id(get_account_id(get_token()), brand_id)
@@ -58,7 +62,8 @@ class BrandResource(Resource):
         if not brand:
             api.abort(brand_service.BrandServiceResponse.DoesNotExist)
 
-        return brand
+        sentiment = get_brand_sentiment(brand)
+        return {'id': brand.id, 'name': brand.name, 'average': sentiment['average'], 'trend': sentiment['trend']}
 
     @api.response(brand_service.BrandServiceResponse.Success, 'Brand details updated successfully.')
     @api.response(brand_service.BrandServiceResponse.AlreadyExists, 'The brand cannot be renamed to an existing brand.')
@@ -75,7 +80,7 @@ class BrandResource(Resource):
         if not brand:
             api.abort(brand_service.BrandServiceResponse.DoesNotExist)
 
-        return brand_service.update_brand(account_id=get_account_id(get_token()), brand=brand, change_data=request.json)
+        return brand_service.update_brand_name(account_id=get_account_id(get_token()), brand=brand, change_data=request.json)
 
 
 @api.route('/<int:brand_id>/synonyms')

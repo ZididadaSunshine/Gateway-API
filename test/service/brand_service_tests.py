@@ -3,7 +3,7 @@ import unittest
 from app.main import db
 from app.main.model.brand_model import Brand
 from app.main.model.synonym_model import Synonym
-from app.main.service.brand_service import create_brand, BrandServiceResponse, update_brand, get_brand_by_id, \
+from app.main.service.brand_service import create_brand, BrandServiceResponse, update_brand_name, get_brand_by_id, \
     get_brand_by_name, get_brands_by_account, delete_brand
 from test.base.database_testcase import DatabaseTestCase
 
@@ -75,7 +75,7 @@ class BrandServiceTests(DatabaseTestCase):
         brand = self._create_dummy_brand(account.id, 'Initial')
 
         new_name = 'New'
-        response, code = update_brand(account.id, brand, {'name': new_name})
+        response, code = update_brand_name(account.id, brand, {'name': new_name})
 
         # Assert that attempt succeeded
         self.assertTrue(response['success'])
@@ -94,7 +94,7 @@ class BrandServiceTests(DatabaseTestCase):
         first_brand = self._create_dummy_brand(account.id, first_name)
         self._create_dummy_brand(account.id, second_name)
 
-        response, code = update_brand(account.id, first_brand, {'name': second_name})
+        response, code = update_brand_name(account.id, first_brand, {'name': second_name})
 
         # Assert that the attempt failed
         self.assertFalse(response['success'])
