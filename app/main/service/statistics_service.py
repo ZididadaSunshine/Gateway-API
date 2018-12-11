@@ -1,6 +1,7 @@
 import datetime
 import os
 
+import random
 import requests
 
 from app.main import db
@@ -14,16 +15,14 @@ def get_overview_statistics(granularity, request_json):
 
 
 def get_brand_statistics(brand):
-    update_frequency = datetime.timedelta(hours=1)
-
     sentiment_average = None
     sentiment_trend = None
     posts = None
 
     # Check if an update is necessary
-    last_updated = brand.statistics_updated_at
+    next_update_at = brand.next_update_at
     now = datetime.datetime.utcnow()
-    if not last_updated or now - last_updated > update_frequency:
+    if not next_update_at or now >= next_update_at:
         synonyms = [synonym.synonym for synonym in synonym_service.get_brand_synonyms(brand.id)]
         if synonyms:
             response = requests.post(f'http://{os.environ["STATISTICS_API_HOST"]}/api/statistics/day/brand',
@@ -35,8 +34,11 @@ def get_brand_statistics(brand):
             posts = response['posts']
 
             # Update brand with new values
+            # Set next update to a random interval to distribute load better throughout the day
+            next_update_at = now + datetime.timedelta(minutes=random.randint(30, 180))
             Brand.query.filter_by(id=brand.id).update(dict(sentiment_average=sentiment_average, posts=posts,
-                                                           sentiment_trend=sentiment_trend, statistics_updated_at=now))
+                                                           sentiment_trend=sentiment_trend,
+                                                           next_update_at=next_update_at))
             db.session.commit()
     else:
         sentiment_average = brand.sentiment_average

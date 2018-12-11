@@ -11,7 +11,7 @@ class Brand(db.Model):
     sentiment_average = db.Column(db.Float, nullable=True)
     sentiment_trend = db.Column(db.Float, nullable=True)
     posts = db.Column(db.Integer, nullable=True)
-    statistics_updated_at = db.Column(db.DateTime, nullable=True)
+    next_update_at = db.Column(db.DateTime, nullable=True)
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     synonyms = db.relationship("Synonym", BrandSynonym.__table__, back_populates="brands")
 
