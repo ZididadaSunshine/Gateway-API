@@ -25,6 +25,8 @@ class BrandsResource(Resource):
             results.append({'id': brand.id, 'name': brand.name, 'average': sentiment['average'],
                             'trend': sentiment['trend']})
 
+        return results
+
     @api.response(brand_service.BrandServiceResponse.Created, 'Brand successfully created.')
     @api.response(brand_service.BrandServiceResponse.AlreadyExists, 'The authorized account already has a brand with that name.')
     @api.expect(BrandDTO.brand, validate=True)
