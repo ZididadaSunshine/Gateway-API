@@ -27,7 +27,7 @@ def get_brand_statistics(brand):
     if not last_updated or now - last_updated > delta / 4:
         synonyms = [synonym.synonym for synonym in synonym_service.get_brand_synonyms(brand.id)]
         if synonyms:
-            response = requests.post(f'http://{os.environ["STATISTICS_API_HOST"]}/api/statistics/day/sentiment_average',
+            response = requests.post(f'http://{os.environ["STATISTICS_API_HOST"]}/api/statistics/day/brand',
                                      json=dict(synonyms=synonyms)).json()
 
             # Update brand with new values
