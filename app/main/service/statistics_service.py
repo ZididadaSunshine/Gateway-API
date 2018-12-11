@@ -14,8 +14,7 @@ def get_overview_statistics(granularity, request_json):
 
 
 def get_brand_statistics(brand):
-    # If delta is updated, the delta string in the POST request should also be updated
-    delta = datetime.timedelta(days=1)
+    update_frequency = datetime.timedelta(hours=1)
 
     sentiment_average = None
     sentiment_trend = None
@@ -24,7 +23,7 @@ def get_brand_statistics(brand):
     # Check if an update is necessary
     last_updated = brand.statistics_updated_at
     now = datetime.datetime.utcnow()
-    if not last_updated or now - last_updated > delta / 4:
+    if not last_updated or now - last_updated > update_frequency:
         synonyms = [synonym.synonym for synonym in synonym_service.get_brand_synonyms(brand.id)]
         if synonyms:
             response = requests.post(f'http://{os.environ["STATISTICS_API_HOST"]}/api/statistics/day/brand',
