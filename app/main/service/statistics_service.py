@@ -35,7 +35,7 @@ def get_brand_statistics(brand):
 
             # Update brand with new values
             # Set next update to a random interval to distribute load better throughout the day
-            next_update_at = now + datetime.timedelta(minutes=random.randint(30, 180))
+            next_update_at = now + datetime.timedelta(hours=random.randint(2, 6))
             Brand.query.filter_by(id=brand.id).update(dict(sentiment_average=sentiment_average, posts=posts,
                                                            sentiment_trend=sentiment_trend,
                                                            next_update_at=next_update_at))
