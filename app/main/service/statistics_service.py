@@ -20,7 +20,7 @@ def get_brand_statistics(brand):
     posts = None
 
     # Check if an update is necessary
-    next_update_at = brand.next_update_at
+    next_update_at = datetime.datetime(year=2020, day=12, month=12)  # brand.next_update_at
     now = datetime.datetime.utcnow()
     if not next_update_at or now >= next_update_at:
         synonyms = [synonym.synonym for synonym in synonym_service.get_brand_synonyms(brand.id)]
