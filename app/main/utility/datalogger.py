@@ -23,16 +23,14 @@ def _append_time(category, time):
 def log_time(category):
     def wrapper(func):
         def wrapped(*args, **kwargs):
-            return _log_time(category, func, *args, **kwargs)
+            now = _current_milli_time()
+            ret_val = func(*args, **kwargs)
+
+            # Log time to execute function
+            _append_time(category, _current_milli_time() - now)
+
+            return ret_val
 
         return wrapped
 
     return wrapper
-
-
-def _log_time(category, function, *args, **kwargs):
-    now = _current_milli_time()
-    ret_value = function(*args, *kwargs)
-    _append_time(category, _current_milli_time() - now)
-
-    return ret_value
