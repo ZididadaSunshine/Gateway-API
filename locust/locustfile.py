@@ -18,22 +18,9 @@ def _append_line_exclusive(file, contents):
         file.write(contents + '\n')
         fcntl.flock(file, fcntl.LOCK_UN)
 
+
 def success(request_type, name, response_time, response_length):
-    endpoint = ''
-
-    if 'login' in name or 'logout' in name:
-        endpoint = 'authorization'
-    elif 'synonyms' in name or 'brand' in name:
-        endpoint = 'brand'
-    elif 'accounts' in name:
-        endpoint = 'account'
-    else:
-        #print(name)
-
-        return
-
     _append_line_exclusive('response_times.dat', f'{_format_log_date()}={response_time}')
-    _append_line_exclusive(f'response_times_{endpoint}.dat', f'{_format_log_date()}={response_time}')
 
 
 events.request_success += success

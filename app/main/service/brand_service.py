@@ -30,7 +30,7 @@ def get_brand_by_name(account_id, name):
     return Brand.query.filter((Brand.account_id == account_id) & (Brand.name.ilike(name))).first()
 
 
-@log_time('delete_account')
+@log_time('delete_brand')
 def delete_brand(brand):
     db.session.delete(brand)
     db.session.commit()
