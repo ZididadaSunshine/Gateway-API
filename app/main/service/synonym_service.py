@@ -3,6 +3,7 @@ import datetime
 from app.main import db
 from app.main.model.brand_synonym_association import BrandSynonym
 from app.main.model.synonym_model import Synonym
+from app.main.utility.datalogger import log_time
 
 
 class SynonymServiceResponse:
@@ -16,6 +17,7 @@ def preprocess_synonym(synonym):
     return synonym.lower()
 
 
+@log_time('get_active_synonyms')
 def get_active_synonyms():
     """ Get a list of synonyms that are currently associated with a brand.
         Returns how many associations each synonym has. """
@@ -23,12 +25,14 @@ def get_active_synonyms():
         group_by(Synonym.id).all()
 
 
+@log_time('get_brand_synonyms')
 def get_brand_synonyms(brand_id):
     """ Get the synonyms associated with a brand. """
     return Synonym.query.\
         join(BrandSynonym, (Synonym.id == BrandSynonym.synonym_id) & (BrandSynonym.brand_id == brand_id)).all()
 
 
+@log_time('add_synonym')
 def add_synonym(brand_id, synonym_data):
     """ Add a synonym to be associate with a brand. """
     synonym = preprocess_synonym(synonym_data['synonym'])
@@ -61,6 +65,7 @@ def add_synonym(brand_id, synonym_data):
     return dict(success=True), SynonymServiceResponse.Created
 
 
+@log_time('delete_synonym')
 def delete_synonym(brand_id, synonym):
     processed_synonym = preprocess_synonym(synonym)
 
