@@ -157,7 +157,7 @@ class BrandControllerTests(BaseTestCase):
 
     @mock.patch('app.main.service.authorization_service.is_authorized', return_value=True)
     @mock.patch('app.main.service.brand_service.get_brand_by_id', return_value=get_brand_instance(1))
-    @mock.patch('app.main.service.brand_service.update_brand',
+    @mock.patch('app.main.service.brand_service.update_brand_name',
                 return_value=(dict(success=True), BrandServiceResponse.Success))
     def test_update_brand_authorized_existing(self, _mock_authorized, _mock_get_brand, _mock_update):
         """ Test an authorized brand update on an existing brand  """
