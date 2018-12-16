@@ -7,6 +7,7 @@ from app.main import db
 from app.main.config import secret
 from app.main.model.account_model import Account
 from app.main.model.invalid_token_model import InvalidToken
+from app.main.utility.datalogger import log_time
 
 
 class AuthorizationResponse:
@@ -61,6 +62,7 @@ def get_token(account):
     return expires, jwt.encode(payload, secret, algorithm='HS256').decode()
 
 
+@log_time('login')
 def login(credentials):
     account = Account.query.filter(Account.email.ilike(credentials['email'])).first()
     if account and account.check_password(credentials['password']):
@@ -70,6 +72,7 @@ def login(credentials):
         return dict(success=False, message='Invalid credentials.'), AuthorizationResponse.InvalidCredentials
 
 
+@log_time('logout')
 def logout(token=None):
     if token:
         invalid_token = InvalidToken(token=token, created_at=datetime.datetime.utcnow())

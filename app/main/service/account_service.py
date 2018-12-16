@@ -2,6 +2,7 @@ import datetime
 
 from app.main import db
 from app.main.model.account_model import Account
+from app.main.utility.datalogger import log_time
 
 
 class AccountServiceResponse:
@@ -9,6 +10,7 @@ class AccountServiceResponse:
     AlreadyExists = 409
 
 
+@log_time('create_account')
 def create_account(user_data):
     existing = Account.query.filter(Account.email.ilike(user_data['email'])).first()
 
