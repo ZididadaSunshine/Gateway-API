@@ -59,16 +59,11 @@ if __name__ == "__main__":
 
     response  = read_stats('response_times.dat', consumers)
     requests  = read_stats('response_times.dat', consumers, count=True)
-    account  = read_stats('response_times_account.dat', consumers)
-    brand = read_stats('response_times_brand.dat', consumers)
-    authorization = read_stats('response_times_authorization.dat', consumers)
+    service  = read_stats('combined.dat', consumers)
 
     resp_x, resp_y = dict_to_avg(response)
     print(list(zip(resp_x, resp_y)))
-    account_x, account_y = dict_to_avg(account)
-    brand_x, brand_y = dict_to_avg(brand)
-    authorization_x, authorization_y = dict_to_avg(authorization)
-    synonym_x, synonym_y = dict_to_avg(brand)
+    service_x, service_y = dict_to_avg(service)
     reqs_x, reqs_y = list(requests.keys())[:-1], list(requests.values())[:-1]
 
     print(reqs_y)
@@ -76,9 +71,7 @@ if __name__ == "__main__":
     fig.set_figwidth(10)
     fig.set_figheight(5)
     ln1 = ax1.plot(resp_x, resp_y, label='Overall response time')
-    ln2 = ax1.plot(account_x, account_y, label='Account response time')
-    ln3 = ax1.plot(authorization_x, authorization_y, label='Authorization response time')
-    ln5 = ax1.plot(synonym_x, synonym_y, label='Synonym/brand response time')
+    ln2 = ax1.plot(service_x, service_y, label='Service response time')
     plt.legend(bbox_to_anchor=(1.1, 1), loc=1, borderaxespad=0.)
     ax1.set_xlabel('Concurrent consumers')
     ax1.set_ylabel('Time (milliseconds)')
@@ -87,11 +80,11 @@ if __name__ == "__main__":
     ax2.set_ylabel('Requests/sec.')
     ln4 = ax2.plot(reqs_x, reqs_y, color='black', label='Requests per second')
 
-    lns = ln1 + ln2 + ln3 + ln4 + ln5
+    lns = ln1 + ln2 + ln4
     labs = [l.get_label() for l in lns]
     ax1.legend(lns, labs, loc=2)
 
     #plt.title('Performance with increasing consumers (1 node)')
     plt.grid(linestyle=':')
     plt.show()
-    fig.savefig("statistics_single_node.pdf", bbox_inches='tight')
+    fig.savefig("statistics_multiple_nodes.pdf", bbox_inches='tight')

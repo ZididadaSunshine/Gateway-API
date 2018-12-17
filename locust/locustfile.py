@@ -44,7 +44,7 @@ def get_account():
 
 
 def get_extra_account():
-    id = random.randint(1, USERS)
+    id = random.uniform(0, 1)
 
     return {'username': f'ExtraUser {id}', 'email': f'extra_email{id}@example.com', 'password': f'password4'}
 
